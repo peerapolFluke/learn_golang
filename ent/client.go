@@ -14,6 +14,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"github.com/pumy2517/ginent/ent/test01"
 	"github.com/pumy2517/ginent/ent/todo"
 )
 
@@ -22,6 +23,8 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// Test01 is the client for interacting with the Test01 builders.
+	Test01 *Test01Client
 	// Todo is the client for interacting with the Todo builders.
 	Todo *TodoClient
 	// additional fields for node api
@@ -39,6 +42,7 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.Test01 = NewTest01Client(c.config)
 	c.Todo = NewTodoClient(c.config)
 }
 
@@ -122,6 +126,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	return &Tx{
 		ctx:    ctx,
 		config: cfg,
+		Test01: NewTest01Client(cfg),
 		Todo:   NewTodoClient(cfg),
 	}, nil
 }
@@ -142,6 +147,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		ctx:    ctx,
 		config: cfg,
+		Test01: NewTest01Client(cfg),
 		Todo:   NewTodoClient(cfg),
 	}, nil
 }
@@ -149,7 +155,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Todo.
+//		Test01.
 //		Query().
 //		Count(ctx)
 func (c *Client) Debug() *Client {
@@ -171,22 +177,176 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.Test01.Use(hooks...)
 	c.Todo.Use(hooks...)
 }
 
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
+	c.Test01.Intercept(interceptors...)
 	c.Todo.Intercept(interceptors...)
 }
 
 // Mutate implements the ent.Mutator interface.
 func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
+	case *Test01Mutation:
+		return c.Test01.mutate(ctx, m)
 	case *TodoMutation:
 		return c.Todo.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
+	}
+}
+
+// Test01Client is a client for the Test01 schema.
+type Test01Client struct {
+	config
+}
+
+// NewTest01Client returns a client for the Test01 from the given config.
+func NewTest01Client(c config) *Test01Client {
+	return &Test01Client{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `test01.Hooks(f(g(h())))`.
+func (c *Test01Client) Use(hooks ...Hook) {
+	c.hooks.Test01 = append(c.hooks.Test01, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `test01.Intercept(f(g(h())))`.
+func (c *Test01Client) Intercept(interceptors ...Interceptor) {
+	c.inters.Test01 = append(c.inters.Test01, interceptors...)
+}
+
+// Create returns a builder for creating a Test01 entity.
+func (c *Test01Client) Create() *Test01Create {
+	mutation := newTest01Mutation(c.config, OpCreate)
+	return &Test01Create{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Test01 entities.
+func (c *Test01Client) CreateBulk(builders ...*Test01Create) *Test01CreateBulk {
+	return &Test01CreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Test01.
+func (c *Test01Client) Update() *Test01Update {
+	mutation := newTest01Mutation(c.config, OpUpdate)
+	return &Test01Update{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *Test01Client) UpdateOne(t *Test01) *Test01UpdateOne {
+	mutation := newTest01Mutation(c.config, OpUpdateOne, withTest01(t))
+	return &Test01UpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *Test01Client) UpdateOneID(id int) *Test01UpdateOne {
+	mutation := newTest01Mutation(c.config, OpUpdateOne, withTest01ID(id))
+	return &Test01UpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Test01.
+func (c *Test01Client) Delete() *Test01Delete {
+	mutation := newTest01Mutation(c.config, OpDelete)
+	return &Test01Delete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *Test01Client) DeleteOne(t *Test01) *Test01DeleteOne {
+	return c.DeleteOneID(t.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *Test01Client) DeleteOneID(id int) *Test01DeleteOne {
+	builder := c.Delete().Where(test01.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &Test01DeleteOne{builder}
+}
+
+// Query returns a query builder for Test01.
+func (c *Test01Client) Query() *Test01Query {
+	return &Test01Query{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeTest01},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Test01 entity by its id.
+func (c *Test01Client) Get(ctx context.Context, id int) (*Test01, error) {
+	return c.Query().Where(test01.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *Test01Client) GetX(ctx context.Context, id int) *Test01 {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryParent queries the parent edge of a Test01.
+func (c *Test01Client) QueryParent(t *Test01) *Test01Query {
+	query := (&Test01Client{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := t.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(test01.Table, test01.FieldID, id),
+			sqlgraph.To(test01.Table, test01.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, test01.ParentTable, test01.ParentColumn),
+		)
+		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryChildren queries the children edge of a Test01.
+func (c *Test01Client) QueryChildren(t *Test01) *Test01Query {
+	query := (&Test01Client{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := t.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(test01.Table, test01.FieldID, id),
+			sqlgraph.To(test01.Table, test01.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, test01.ChildrenTable, test01.ChildrenColumn),
+		)
+		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *Test01Client) Hooks() []Hook {
+	return c.hooks.Test01
+}
+
+// Interceptors returns the client interceptors.
+func (c *Test01Client) Interceptors() []Interceptor {
+	return c.inters.Test01
+}
+
+func (c *Test01Client) mutate(ctx context.Context, m *Test01Mutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&Test01Create{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&Test01Update{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&Test01UpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&Test01Delete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Test01 mutation op: %q", m.Op())
 	}
 }
 
@@ -343,9 +503,9 @@ func (c *TodoClient) mutate(ctx context.Context, m *TodoMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Todo []ent.Hook
+		Test01, Todo []ent.Hook
 	}
 	inters struct {
-		Todo []ent.Interceptor
+		Test01, Todo []ent.Interceptor
 	}
 )

@@ -5,13 +5,55 @@ package ent
 import (
 	"time"
 
+	"github.com/pumy2517/ginent/ent/test01"
 	"github.com/pumy2517/ginent/ent/todo"
 )
+
+// CreateTest01Input represents a mutation input for creating test01s.
+type CreateTest01Input struct {
+	Text      string
+	CreatedAt *time.Time
+	UpdateAt  *time.Time
+	Status    *test01.Status
+	Priority  *int
+	ParentID  *int
+	ChildIDs  []int
+}
+
+// Mutate applies the CreateTest01Input on the Test01Mutation builder.
+func (i *CreateTest01Input) Mutate(m *Test01Mutation) {
+	m.SetText(i.Text)
+	if v := i.CreatedAt; v != nil {
+		m.SetCreatedAt(*v)
+	}
+	if v := i.UpdateAt; v != nil {
+		m.SetUpdateAt(*v)
+	}
+	if v := i.Status; v != nil {
+		m.SetStatus(*v)
+	}
+	if v := i.Priority; v != nil {
+		m.SetPriority(*v)
+	}
+	if v := i.ParentID; v != nil {
+		m.SetParentID(*v)
+	}
+	if v := i.ChildIDs; len(v) > 0 {
+		m.AddChildIDs(v...)
+	}
+}
+
+// SetInput applies the change-set in the CreateTest01Input on the Test01Create builder.
+func (c *Test01Create) SetInput(i CreateTest01Input) *Test01Create {
+	i.Mutate(c.Mutation())
+	return c
+}
 
 // CreateTodoInput represents a mutation input for creating todos.
 type CreateTodoInput struct {
 	Text      string
 	CreatedAt *time.Time
+	UpdateAt  *time.Time
 	Status    *todo.Status
 	Priority  *int
 	ParentID  *int
@@ -23,6 +65,9 @@ func (i *CreateTodoInput) Mutate(m *TodoMutation) {
 	m.SetText(i.Text)
 	if v := i.CreatedAt; v != nil {
 		m.SetCreatedAt(*v)
+	}
+	if v := i.UpdateAt; v != nil {
+		m.SetUpdateAt(*v)
 	}
 	if v := i.Status; v != nil {
 		m.SetStatus(*v)

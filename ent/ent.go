@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"github.com/pumy2517/ginent/ent/test01"
 	"github.com/pumy2517/ginent/ent/todo"
 )
 
@@ -73,7 +74,8 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			todo.Table: todo.ValidColumn,
+			test01.Table: test01.ValidColumn,
+			todo.Table:   todo.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

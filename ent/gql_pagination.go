@@ -14,6 +14,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/errcode"
+	"github.com/pumy2517/ginent/ent/test01"
 	"github.com/pumy2517/ginent/ent/todo"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
@@ -96,6 +97,444 @@ func paginateLimit(first, last *int) int {
 		limit = *last + 1
 	}
 	return limit
+}
+
+// Test01Edge is the edge representation of Test01.
+type Test01Edge struct {
+	Node   *Test01 `json:"node"`
+	Cursor Cursor  `json:"cursor"`
+}
+
+// Test01Connection is the connection containing edges to Test01.
+type Test01Connection struct {
+	Edges      []*Test01Edge `json:"edges"`
+	PageInfo   PageInfo      `json:"pageInfo"`
+	TotalCount int           `json:"totalCount"`
+}
+
+func (c *Test01Connection) build(nodes []*Test01, pager *test01Pager, after *Cursor, first *int, before *Cursor, last *int) {
+	c.PageInfo.HasNextPage = before != nil
+	c.PageInfo.HasPreviousPage = after != nil
+	if first != nil && *first+1 == len(nodes) {
+		c.PageInfo.HasNextPage = true
+		nodes = nodes[:len(nodes)-1]
+	} else if last != nil && *last+1 == len(nodes) {
+		c.PageInfo.HasPreviousPage = true
+		nodes = nodes[:len(nodes)-1]
+	}
+	var nodeAt func(int) *Test01
+	if last != nil {
+		n := len(nodes) - 1
+		nodeAt = func(i int) *Test01 {
+			return nodes[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *Test01 {
+			return nodes[i]
+		}
+	}
+	c.Edges = make([]*Test01Edge, len(nodes))
+	for i := range nodes {
+		node := nodeAt(i)
+		c.Edges[i] = &Test01Edge{
+			Node:   node,
+			Cursor: pager.toCursor(node),
+		}
+	}
+	if l := len(c.Edges); l > 0 {
+		c.PageInfo.StartCursor = &c.Edges[0].Cursor
+		c.PageInfo.EndCursor = &c.Edges[l-1].Cursor
+	}
+	if c.TotalCount == 0 {
+		c.TotalCount = len(nodes)
+	}
+}
+
+// Test01PaginateOption enables pagination customization.
+type Test01PaginateOption func(*test01Pager) error
+
+// WithTest01Order configures pagination ordering.
+func WithTest01Order(order []*Test01Order) Test01PaginateOption {
+	return func(pager *test01Pager) error {
+		for _, o := range order {
+			if err := o.Direction.Validate(); err != nil {
+				return err
+			}
+		}
+		pager.order = append(pager.order, order...)
+		return nil
+	}
+}
+
+// WithTest01Filter configures pagination filter.
+func WithTest01Filter(filter func(*Test01Query) (*Test01Query, error)) Test01PaginateOption {
+	return func(pager *test01Pager) error {
+		if filter == nil {
+			return errors.New("Test01Query filter cannot be nil")
+		}
+		pager.filter = filter
+		return nil
+	}
+}
+
+type test01Pager struct {
+	reverse bool
+	order   []*Test01Order
+	filter  func(*Test01Query) (*Test01Query, error)
+}
+
+func newTest01Pager(opts []Test01PaginateOption, reverse bool) (*test01Pager, error) {
+	pager := &test01Pager{reverse: reverse}
+	for _, opt := range opts {
+		if err := opt(pager); err != nil {
+			return nil, err
+		}
+	}
+	for i, o := range pager.order {
+		if i > 0 && o.Field == pager.order[i-1].Field {
+			return nil, fmt.Errorf("duplicate order direction %q", o.Direction)
+		}
+	}
+	return pager, nil
+}
+
+func (p *test01Pager) applyFilter(query *Test01Query) (*Test01Query, error) {
+	if p.filter != nil {
+		return p.filter(query)
+	}
+	return query, nil
+}
+
+func (p *test01Pager) toCursor(t *Test01) Cursor {
+	cs := make([]any, 0, len(p.order))
+	for _, o := range p.order {
+		cs = append(cs, o.Field.toCursor(t).Value)
+	}
+	return Cursor{ID: t.ID, Value: cs}
+}
+
+func (p *test01Pager) applyCursors(query *Test01Query, after, before *Cursor) (*Test01Query, error) {
+	idDirection := entgql.OrderDirectionAsc
+	if p.reverse {
+		idDirection = entgql.OrderDirectionDesc
+	}
+	fields, directions := make([]string, 0, len(p.order)), make([]OrderDirection, 0, len(p.order))
+	for _, o := range p.order {
+		fields = append(fields, o.Field.column)
+		direction := o.Direction
+		if p.reverse {
+			direction = direction.Reverse()
+		}
+		directions = append(directions, direction)
+	}
+	predicates, err := entgql.MultiCursorsPredicate(after, before, &entgql.MultiCursorsOptions{
+		FieldID:     DefaultTest01Order.Field.column,
+		DirectionID: idDirection,
+		Fields:      fields,
+		Directions:  directions,
+	})
+	if err != nil {
+		return nil, err
+	}
+	for _, predicate := range predicates {
+		query = query.Where(predicate)
+	}
+	return query, nil
+}
+
+func (p *test01Pager) applyOrder(query *Test01Query) *Test01Query {
+	var defaultOrdered bool
+	for _, o := range p.order {
+		direction := o.Direction
+		if p.reverse {
+			direction = direction.Reverse()
+		}
+		query = query.Order(o.Field.toTerm(direction.OrderTermOption()))
+		if o.Field.column == DefaultTest01Order.Field.column {
+			defaultOrdered = true
+		}
+		switch o.Field.column {
+		case Test01OrderFieldParentPriority.column:
+		default:
+			if len(query.ctx.Fields) > 0 {
+				query.ctx.AppendFieldOnce(o.Field.column)
+			}
+		}
+	}
+	if !defaultOrdered {
+		direction := entgql.OrderDirectionAsc
+		if p.reverse {
+			direction = direction.Reverse()
+		}
+		query = query.Order(DefaultTest01Order.Field.toTerm(direction.OrderTermOption()))
+	}
+	return query
+}
+
+func (p *test01Pager) orderExpr(query *Test01Query) sql.Querier {
+	for _, o := range p.order {
+		switch o.Field.column {
+		case Test01OrderFieldParentPriority.column:
+			direction := o.Direction
+			if p.reverse {
+				direction = direction.Reverse()
+			}
+			query = query.Order(o.Field.toTerm(direction.OrderTermOption()))
+		default:
+			if len(query.ctx.Fields) > 0 {
+				query.ctx.AppendFieldOnce(o.Field.column)
+			}
+		}
+	}
+	return sql.ExprFunc(func(b *sql.Builder) {
+		for _, o := range p.order {
+			direction := o.Direction
+			if p.reverse {
+				direction = direction.Reverse()
+			}
+			b.Ident(o.Field.column).Pad().WriteString(string(direction))
+			b.Comma()
+		}
+		direction := entgql.OrderDirectionAsc
+		if p.reverse {
+			direction = direction.Reverse()
+		}
+		b.Ident(DefaultTest01Order.Field.column).Pad().WriteString(string(direction))
+	})
+}
+
+// Paginate executes the query and returns a relay based cursor connection to Test01.
+func (t *Test01Query) Paginate(
+	ctx context.Context, after *Cursor, first *int,
+	before *Cursor, last *int, opts ...Test01PaginateOption,
+) (*Test01Connection, error) {
+	if err := validateFirstLast(first, last); err != nil {
+		return nil, err
+	}
+	pager, err := newTest01Pager(opts, last != nil)
+	if err != nil {
+		return nil, err
+	}
+	if t, err = pager.applyFilter(t); err != nil {
+		return nil, err
+	}
+	conn := &Test01Connection{Edges: []*Test01Edge{}}
+	ignoredEdges := !hasCollectedField(ctx, edgesField)
+	if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
+		hasPagination := after != nil || first != nil || before != nil || last != nil
+		if hasPagination || ignoredEdges {
+			if conn.TotalCount, err = t.Clone().Count(ctx); err != nil {
+				return nil, err
+			}
+			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
+			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
+		}
+	}
+	if ignoredEdges || (first != nil && *first == 0) || (last != nil && *last == 0) {
+		return conn, nil
+	}
+	if t, err = pager.applyCursors(t, after, before); err != nil {
+		return nil, err
+	}
+	if limit := paginateLimit(first, last); limit != 0 {
+		t.Limit(limit)
+	}
+	if field := collectedField(ctx, edgesField, nodeField); field != nil {
+		if err := t.collectField(ctx, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
+			return nil, err
+		}
+	}
+	t = pager.applyOrder(t)
+	nodes, err := t.All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	conn.build(nodes, pager, after, first, before, last)
+	return conn, nil
+}
+
+var (
+	// Test01OrderFieldText orders Test01 by text.
+	Test01OrderFieldText = &Test01OrderField{
+		Value: func(t *Test01) (ent.Value, error) {
+			return t.Text, nil
+		},
+		column: test01.FieldText,
+		toTerm: test01.ByText,
+		toCursor: func(t *Test01) Cursor {
+			return Cursor{
+				ID:    t.ID,
+				Value: t.Text,
+			}
+		},
+	}
+	// Test01OrderFieldCreatedAt orders Test01 by created_at.
+	Test01OrderFieldCreatedAt = &Test01OrderField{
+		Value: func(t *Test01) (ent.Value, error) {
+			return t.CreatedAt, nil
+		},
+		column: test01.FieldCreatedAt,
+		toTerm: test01.ByCreatedAt,
+		toCursor: func(t *Test01) Cursor {
+			return Cursor{
+				ID:    t.ID,
+				Value: t.CreatedAt,
+			}
+		},
+	}
+	// Test01OrderFieldUpdateAt orders Test01 by update_at.
+	Test01OrderFieldUpdateAt = &Test01OrderField{
+		Value: func(t *Test01) (ent.Value, error) {
+			return t.UpdateAt, nil
+		},
+		column: test01.FieldUpdateAt,
+		toTerm: test01.ByUpdateAt,
+		toCursor: func(t *Test01) Cursor {
+			return Cursor{
+				ID:    t.ID,
+				Value: t.UpdateAt,
+			}
+		},
+	}
+	// Test01OrderFieldStatus orders Test01 by status.
+	Test01OrderFieldStatus = &Test01OrderField{
+		Value: func(t *Test01) (ent.Value, error) {
+			return t.Status, nil
+		},
+		column: test01.FieldStatus,
+		toTerm: test01.ByStatus,
+		toCursor: func(t *Test01) Cursor {
+			return Cursor{
+				ID:    t.ID,
+				Value: t.Status,
+			}
+		},
+	}
+	// Test01OrderFieldPriority orders Test01 by priority.
+	Test01OrderFieldPriority = &Test01OrderField{
+		Value: func(t *Test01) (ent.Value, error) {
+			return t.Priority, nil
+		},
+		column: test01.FieldPriority,
+		toTerm: test01.ByPriority,
+		toCursor: func(t *Test01) Cursor {
+			return Cursor{
+				ID:    t.ID,
+				Value: t.Priority,
+			}
+		},
+	}
+	// Test01OrderFieldParentPriority orders by PARENT_PRIORITY.
+	Test01OrderFieldParentPriority = &Test01OrderField{
+		Value: func(t *Test01) (ent.Value, error) {
+			return t.Value("parent_priority")
+		},
+		column: "parent_priority",
+		toTerm: func(opts ...sql.OrderTermOption) test01.OrderOption {
+			return test01.ByParentField(
+				test01.FieldPriority,
+				append(opts, sql.OrderSelectAs("parent_priority"))...,
+			)
+		},
+		toCursor: func(t *Test01) Cursor {
+			cv, _ := t.Value("parent_priority")
+			return Cursor{
+				ID:    t.ID,
+				Value: cv,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f Test01OrderField) String() string {
+	var str string
+	switch f.column {
+	case Test01OrderFieldText.column:
+		str = "TEXT"
+	case Test01OrderFieldCreatedAt.column:
+		str = "CREATED_AT"
+	case Test01OrderFieldUpdateAt.column:
+		str = "UPDATE_AT"
+	case Test01OrderFieldStatus.column:
+		str = "STATUS"
+	case Test01OrderFieldPriority.column:
+		str = "PRIORITY"
+	case Test01OrderFieldParentPriority.column:
+		str = "PARENT_PRIORITY"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f Test01OrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *Test01OrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("Test01OrderField %T must be a string", v)
+	}
+	switch str {
+	case "TEXT":
+		*f = *Test01OrderFieldText
+	case "CREATED_AT":
+		*f = *Test01OrderFieldCreatedAt
+	case "UPDATE_AT":
+		*f = *Test01OrderFieldUpdateAt
+	case "STATUS":
+		*f = *Test01OrderFieldStatus
+	case "PRIORITY":
+		*f = *Test01OrderFieldPriority
+	case "PARENT_PRIORITY":
+		*f = *Test01OrderFieldParentPriority
+	default:
+		return fmt.Errorf("%s is not a valid Test01OrderField", str)
+	}
+	return nil
+}
+
+// Test01OrderField defines the ordering field of Test01.
+type Test01OrderField struct {
+	// Value extracts the ordering value from the given Test01.
+	Value    func(*Test01) (ent.Value, error)
+	column   string // field or computed.
+	toTerm   func(...sql.OrderTermOption) test01.OrderOption
+	toCursor func(*Test01) Cursor
+}
+
+// Test01Order defines the ordering of Test01.
+type Test01Order struct {
+	Direction OrderDirection    `json:"direction"`
+	Field     *Test01OrderField `json:"field"`
+}
+
+// DefaultTest01Order is the default ordering of Test01.
+var DefaultTest01Order = &Test01Order{
+	Direction: entgql.OrderDirectionAsc,
+	Field: &Test01OrderField{
+		Value: func(t *Test01) (ent.Value, error) {
+			return t.ID, nil
+		},
+		column: test01.FieldID,
+		toTerm: test01.ByID,
+		toCursor: func(t *Test01) Cursor {
+			return Cursor{ID: t.ID}
+		},
+	},
+}
+
+// ToEdge converts Test01 into Test01Edge.
+func (t *Test01) ToEdge(order *Test01Order) *Test01Edge {
+	if order == nil {
+		order = DefaultTest01Order
+	}
+	return &Test01Edge{
+		Node:   t,
+		Cursor: order.Field.toCursor(t),
+	}
 }
 
 // TodoEdge is the edge representation of Todo.
@@ -381,6 +820,20 @@ var (
 			}
 		},
 	}
+	// TodoOrderFieldUpdateAt orders Todo by update_at.
+	TodoOrderFieldUpdateAt = &TodoOrderField{
+		Value: func(t *Todo) (ent.Value, error) {
+			return t.UpdateAt, nil
+		},
+		column: todo.FieldUpdateAt,
+		toTerm: todo.ByUpdateAt,
+		toCursor: func(t *Todo) Cursor {
+			return Cursor{
+				ID:    t.ID,
+				Value: t.UpdateAt,
+			}
+		},
+	}
 	// TodoOrderFieldStatus orders Todo by status.
 	TodoOrderFieldStatus = &TodoOrderField{
 		Value: func(t *Todo) (ent.Value, error) {
@@ -439,6 +892,8 @@ func (f TodoOrderField) String() string {
 		str = "TEXT"
 	case TodoOrderFieldCreatedAt.column:
 		str = "CREATED_AT"
+	case TodoOrderFieldUpdateAt.column:
+		str = "UPDATE_AT"
 	case TodoOrderFieldStatus.column:
 		str = "STATUS"
 	case TodoOrderFieldPriority.column:
@@ -465,6 +920,8 @@ func (f *TodoOrderField) UnmarshalGQL(v interface{}) error {
 		*f = *TodoOrderFieldText
 	case "CREATED_AT":
 		*f = *TodoOrderFieldCreatedAt
+	case "UPDATE_AT":
+		*f = *TodoOrderFieldUpdateAt
 	case "STATUS":
 		*f = *TodoOrderFieldStatus
 	case "PRIORITY":

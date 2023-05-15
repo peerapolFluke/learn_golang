@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/pumy2517/ginent/ent/schema"
+	"github.com/pumy2517/ginent/ent/test01"
 	"github.com/pumy2517/ginent/ent/todo"
 )
 
@@ -13,6 +14,24 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	test01Fields := schema.Test01{}.Fields()
+	_ = test01Fields
+	// test01DescText is the schema descriptor for text field.
+	test01DescText := test01Fields[0].Descriptor()
+	// test01.TextValidator is a validator for the "text" field. It is called by the builders before save.
+	test01.TextValidator = test01DescText.Validators[0].(func(string) error)
+	// test01DescCreatedAt is the schema descriptor for created_at field.
+	test01DescCreatedAt := test01Fields[1].Descriptor()
+	// test01.DefaultCreatedAt holds the default value on creation for the created_at field.
+	test01.DefaultCreatedAt = test01DescCreatedAt.Default.(func() time.Time)
+	// test01DescUpdateAt is the schema descriptor for update_at field.
+	test01DescUpdateAt := test01Fields[2].Descriptor()
+	// test01.DefaultUpdateAt holds the default value on creation for the update_at field.
+	test01.DefaultUpdateAt = test01DescUpdateAt.Default.(func() time.Time)
+	// test01DescPriority is the schema descriptor for priority field.
+	test01DescPriority := test01Fields[4].Descriptor()
+	// test01.DefaultPriority holds the default value on creation for the priority field.
+	test01.DefaultPriority = test01DescPriority.Default.(int)
 	todoFields := schema.Todo{}.Fields()
 	_ = todoFields
 	// todoDescText is the schema descriptor for text field.
@@ -23,8 +42,12 @@ func init() {
 	todoDescCreatedAt := todoFields[1].Descriptor()
 	// todo.DefaultCreatedAt holds the default value on creation for the created_at field.
 	todo.DefaultCreatedAt = todoDescCreatedAt.Default.(func() time.Time)
+	// todoDescUpdateAt is the schema descriptor for update_at field.
+	todoDescUpdateAt := todoFields[2].Descriptor()
+	// todo.DefaultUpdateAt holds the default value on creation for the update_at field.
+	todo.DefaultUpdateAt = todoDescUpdateAt.Default.(func() time.Time)
 	// todoDescPriority is the schema descriptor for priority field.
-	todoDescPriority := todoFields[3].Descriptor()
+	todoDescPriority := todoFields[4].Descriptor()
 	// todo.DefaultPriority holds the default value on creation for the priority field.
 	todo.DefaultPriority = todoDescPriority.Default.(int)
 }

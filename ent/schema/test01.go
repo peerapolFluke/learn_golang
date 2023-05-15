@@ -11,12 +11,12 @@ import (
 )
 
 // Todo holds the schema definition for the Todo entity.
-type Todo struct {
+type Test01 struct {
 	ent.Schema
 }
 
 // Fields of the Todo.
-func (Todo) Fields() []ent.Field {
+func (Test01) Fields() []ent.Field {
 	return []ent.Field{
 		field.Text("text").
 			NotEmpty().Annotations(
@@ -52,9 +52,9 @@ func (Todo) Fields() []ent.Field {
 }
 
 // Edges of the Todo.
-func (Todo) Edges() []ent.Edge {
+func (Test01) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("children", Todo.Type).
+		edge.To("children", Test01.Type).
 			From("parent").
 			Annotations(
 				entgql.OrderField("PARENT_PRIORITY"),
@@ -63,7 +63,7 @@ func (Todo) Edges() []ent.Edge {
 	}
 }
 
-func (Todo) Annotations() []schema.Annotation {
+func (Test01) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entgql.RelayConnection(),
 		entgql.MultiOrder(),

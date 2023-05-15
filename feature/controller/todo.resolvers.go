@@ -1,4 +1,4 @@
-package ginent
+package controller
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -6,17 +6,19 @@ package ginent
 
 import (
 	"context"
+	// "fmt"
 
+	"github.com/pumy2517/ginent"
 	"github.com/pumy2517/ginent/ent"
 	"github.com/pumy2517/ginent/feature/todo"
 )
 
 // CreateTodo is the resolver for the createTodo field.
 func (r *mutationResolver) CreateTodo(ctx context.Context, input ent.CreateTodoInput) (*ent.Todo, error) {
-	return todo.CreateTodo(&ctx, r.client, &input)
+	return todo.CreateTodo(&ctx, r.client, &input) //
 }
 
-// Mutation returns MutationResolver implementation.
-func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
+// Mutation returns ginent.MutationResolver implementation.
+func (r *Resolver) Mutation() ginent.MutationResolver { return &mutationResolver{r} }
 
 type mutationResolver struct{ *Resolver }

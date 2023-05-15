@@ -9,6 +9,18 @@ import (
 	"github.com/pumy2517/ginent/ent"
 )
 
+// The Test01Func type is an adapter to allow the use of ordinary
+// function as Test01 mutator.
+type Test01Func func(context.Context, *ent.Test01Mutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f Test01Func) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.Test01Mutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.Test01Mutation", m)
+}
+
 // The TodoFunc type is an adapter to allow the use of ordinary
 // function as Todo mutator.
 type TodoFunc func(context.Context, *ent.TodoMutation) (ent.Value, error)

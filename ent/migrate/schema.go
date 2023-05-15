@@ -8,11 +8,36 @@ import (
 )
 
 var (
+	// Test01sColumns holds the columns for the "test01s" table.
+	Test01sColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "text", Type: field.TypeString, Size: 2147483647},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "update_at", Type: field.TypeTime},
+		{Name: "status", Type: field.TypeEnum, Enums: []string{"IN_PROGRESS", "COMPLETED"}, Default: "IN_PROGRESS"},
+		{Name: "priority", Type: field.TypeInt, Default: 0},
+		{Name: "test01_children", Type: field.TypeInt, Nullable: true},
+	}
+	// Test01sTable holds the schema information for the "test01s" table.
+	Test01sTable = &schema.Table{
+		Name:       "test01s",
+		Columns:    Test01sColumns,
+		PrimaryKey: []*schema.Column{Test01sColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "test01s_test01s_children",
+				Columns:    []*schema.Column{Test01sColumns[6]},
+				RefColumns: []*schema.Column{Test01sColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
 	// TodosColumns holds the columns for the "todos" table.
 	TodosColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "text", Type: field.TypeString, Size: 2147483647},
 		{Name: "created_at", Type: field.TypeTime},
+		{Name: "update_at", Type: field.TypeTime},
 		{Name: "status", Type: field.TypeEnum, Enums: []string{"IN_PROGRESS", "COMPLETED"}, Default: "IN_PROGRESS"},
 		{Name: "priority", Type: field.TypeInt, Default: 0},
 		{Name: "todo_children", Type: field.TypeInt, Nullable: true},
@@ -25,7 +50,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "todos_todos_children",
-				Columns:    []*schema.Column{TodosColumns[5]},
+				Columns:    []*schema.Column{TodosColumns[6]},
 				RefColumns: []*schema.Column{TodosColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -33,10 +58,12 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		Test01sTable,
 		TodosTable,
 	}
 )
 
 func init() {
+	Test01sTable.ForeignKeys[0].RefTable = Test01sTable
 	TodosTable.ForeignKeys[0].RefTable = TodosTable
 }

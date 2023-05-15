@@ -40,6 +40,20 @@ func (tc *TodoCreate) SetNillableCreatedAt(t *time.Time) *TodoCreate {
 	return tc
 }
 
+// SetUpdateAt sets the "update_at" field.
+func (tc *TodoCreate) SetUpdateAt(t time.Time) *TodoCreate {
+	tc.mutation.SetUpdateAt(t)
+	return tc
+}
+
+// SetNillableUpdateAt sets the "update_at" field if the given value is not nil.
+func (tc *TodoCreate) SetNillableUpdateAt(t *time.Time) *TodoCreate {
+	if t != nil {
+		tc.SetUpdateAt(*t)
+	}
+	return tc
+}
+
 // SetStatus sets the "status" field.
 func (tc *TodoCreate) SetStatus(t todo.Status) *TodoCreate {
 	tc.mutation.SetStatus(t)
@@ -141,6 +155,10 @@ func (tc *TodoCreate) defaults() {
 		v := todo.DefaultCreatedAt()
 		tc.mutation.SetCreatedAt(v)
 	}
+	if _, ok := tc.mutation.UpdateAt(); !ok {
+		v := todo.DefaultUpdateAt()
+		tc.mutation.SetUpdateAt(v)
+	}
 	if _, ok := tc.mutation.Status(); !ok {
 		v := todo.DefaultStatus
 		tc.mutation.SetStatus(v)
@@ -163,6 +181,9 @@ func (tc *TodoCreate) check() error {
 	}
 	if _, ok := tc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Todo.created_at"`)}
+	}
+	if _, ok := tc.mutation.UpdateAt(); !ok {
+		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "Todo.update_at"`)}
 	}
 	if _, ok := tc.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Todo.status"`)}
@@ -208,6 +229,10 @@ func (tc *TodoCreate) createSpec() (*Todo, *sqlgraph.CreateSpec) {
 	if value, ok := tc.mutation.CreatedAt(); ok {
 		_spec.SetField(todo.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
+	}
+	if value, ok := tc.mutation.UpdateAt(); ok {
+		_spec.SetField(todo.FieldUpdateAt, field.TypeTime, value)
+		_node.UpdateAt = value
 	}
 	if value, ok := tc.mutation.Status(); ok {
 		_spec.SetField(todo.FieldStatus, field.TypeEnum, value)

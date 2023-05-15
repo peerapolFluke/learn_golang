@@ -1,8 +1,11 @@
-package ginent
+package controller
 
+// This file will not be regenerated automatically.
 import (
-	"github.com/99designs/gqlgen/graphql"
 	"github.com/pumy2517/ginent/ent"
+
+	"github.com/99designs/gqlgen/graphql"
+	"github.com/pumy2517/ginent"
 )
 
 // This file will not be regenerated automatically.
@@ -14,7 +17,7 @@ type Resolver struct {
 }
 
 func NewSchema(client *ent.Client) graphql.ExecutableSchema {
-	return NewExecutableSchema(Config{
+	return ginent.NewExecutableSchema(ginent.Config{
 		Resolvers: &Resolver{
 			client,
 		},

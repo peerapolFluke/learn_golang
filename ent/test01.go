@@ -9,11 +9,11 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/pumy2517/ginent/ent/todo"
+	"github.com/pumy2517/ginent/ent/test01"
 )
 
-// Todo is the model entity for the Todo schema.
-type Todo struct {
+// Test01 is the model entity for the Test01 schema.
+type Test01 struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
@@ -24,38 +24,38 @@ type Todo struct {
 	// UpdateAt holds the value of the "update_at" field.
 	UpdateAt time.Time `json:"update_at,omitempty"`
 	// Status holds the value of the "status" field.
-	Status todo.Status `json:"status,omitempty"`
+	Status test01.Status `json:"status,omitempty"`
 	// Priority holds the value of the "priority" field.
 	Priority int `json:"priority,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the TodoQuery when eager-loading is set.
-	Edges         TodoEdges `json:"edges"`
-	todo_children *int
-	selectValues  sql.SelectValues
+	// The values are being populated by the Test01Query when eager-loading is set.
+	Edges           Test01Edges `json:"edges"`
+	test01_children *int
+	selectValues    sql.SelectValues
 }
 
-// TodoEdges holds the relations/edges for other nodes in the graph.
-type TodoEdges struct {
+// Test01Edges holds the relations/edges for other nodes in the graph.
+type Test01Edges struct {
 	// Parent holds the value of the parent edge.
-	Parent *Todo `json:"parent,omitempty"`
+	Parent *Test01 `json:"parent,omitempty"`
 	// Children holds the value of the children edge.
-	Children []*Todo `json:"children,omitempty"`
+	Children []*Test01 `json:"children,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
 	// totalCount holds the count of the edges above.
 	totalCount [2]map[string]int
 
-	namedChildren map[string][]*Todo
+	namedChildren map[string][]*Test01
 }
 
 // ParentOrErr returns the Parent value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e TodoEdges) ParentOrErr() (*Todo, error) {
+func (e Test01Edges) ParentOrErr() (*Test01, error) {
 	if e.loadedTypes[0] {
 		if e.Parent == nil {
 			// Edge was loaded but was not found.
-			return nil, &NotFoundError{label: todo.Label}
+			return nil, &NotFoundError{label: test01.Label}
 		}
 		return e.Parent, nil
 	}
@@ -64,7 +64,7 @@ func (e TodoEdges) ParentOrErr() (*Todo, error) {
 
 // ChildrenOrErr returns the Children value or an error if the edge
 // was not loaded in eager-loading.
-func (e TodoEdges) ChildrenOrErr() ([]*Todo, error) {
+func (e Test01Edges) ChildrenOrErr() ([]*Test01, error) {
 	if e.loadedTypes[1] {
 		return e.Children, nil
 	}
@@ -72,17 +72,17 @@ func (e TodoEdges) ChildrenOrErr() ([]*Todo, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*Todo) scanValues(columns []string) ([]any, error) {
+func (*Test01) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case todo.FieldID, todo.FieldPriority:
+		case test01.FieldID, test01.FieldPriority:
 			values[i] = new(sql.NullInt64)
-		case todo.FieldText, todo.FieldStatus:
+		case test01.FieldText, test01.FieldStatus:
 			values[i] = new(sql.NullString)
-		case todo.FieldCreatedAt, todo.FieldUpdateAt:
+		case test01.FieldCreatedAt, test01.FieldUpdateAt:
 			values[i] = new(sql.NullTime)
-		case todo.ForeignKeys[0]: // todo_children
+		case test01.ForeignKeys[0]: // test01_children
 			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -92,55 +92,55 @@ func (*Todo) scanValues(columns []string) ([]any, error) {
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the Todo fields.
-func (t *Todo) assignValues(columns []string, values []any) error {
+// to the Test01 fields.
+func (t *Test01) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	for i := range columns {
 		switch columns[i] {
-		case todo.FieldID:
+		case test01.FieldID:
 			value, ok := values[i].(*sql.NullInt64)
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			t.ID = int(value.Int64)
-		case todo.FieldText:
+		case test01.FieldText:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field text", values[i])
 			} else if value.Valid {
 				t.Text = value.String
 			}
-		case todo.FieldCreatedAt:
+		case test01.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
 				t.CreatedAt = value.Time
 			}
-		case todo.FieldUpdateAt:
+		case test01.FieldUpdateAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field update_at", values[i])
 			} else if value.Valid {
 				t.UpdateAt = value.Time
 			}
-		case todo.FieldStatus:
+		case test01.FieldStatus:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
-				t.Status = todo.Status(value.String)
+				t.Status = test01.Status(value.String)
 			}
-		case todo.FieldPriority:
+		case test01.FieldPriority:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field priority", values[i])
 			} else if value.Valid {
 				t.Priority = int(value.Int64)
 			}
-		case todo.ForeignKeys[0]:
+		case test01.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for edge-field todo_children", value)
+				return fmt.Errorf("unexpected type %T for edge-field test01_children", value)
 			} else if value.Valid {
-				t.todo_children = new(int)
-				*t.todo_children = int(value.Int64)
+				t.test01_children = new(int)
+				*t.test01_children = int(value.Int64)
 			}
 		default:
 			t.selectValues.Set(columns[i], values[i])
@@ -149,44 +149,44 @@ func (t *Todo) assignValues(columns []string, values []any) error {
 	return nil
 }
 
-// Value returns the ent.Value that was dynamically selected and assigned to the Todo.
+// Value returns the ent.Value that was dynamically selected and assigned to the Test01.
 // This includes values selected through modifiers, order, etc.
-func (t *Todo) Value(name string) (ent.Value, error) {
+func (t *Test01) Value(name string) (ent.Value, error) {
 	return t.selectValues.Get(name)
 }
 
-// QueryParent queries the "parent" edge of the Todo entity.
-func (t *Todo) QueryParent() *TodoQuery {
-	return NewTodoClient(t.config).QueryParent(t)
+// QueryParent queries the "parent" edge of the Test01 entity.
+func (t *Test01) QueryParent() *Test01Query {
+	return NewTest01Client(t.config).QueryParent(t)
 }
 
-// QueryChildren queries the "children" edge of the Todo entity.
-func (t *Todo) QueryChildren() *TodoQuery {
-	return NewTodoClient(t.config).QueryChildren(t)
+// QueryChildren queries the "children" edge of the Test01 entity.
+func (t *Test01) QueryChildren() *Test01Query {
+	return NewTest01Client(t.config).QueryChildren(t)
 }
 
-// Update returns a builder for updating this Todo.
-// Note that you need to call Todo.Unwrap() before calling this method if this Todo
+// Update returns a builder for updating this Test01.
+// Note that you need to call Test01.Unwrap() before calling this method if this Test01
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (t *Todo) Update() *TodoUpdateOne {
-	return NewTodoClient(t.config).UpdateOne(t)
+func (t *Test01) Update() *Test01UpdateOne {
+	return NewTest01Client(t.config).UpdateOne(t)
 }
 
-// Unwrap unwraps the Todo entity that was returned from a transaction after it was closed,
+// Unwrap unwraps the Test01 entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (t *Todo) Unwrap() *Todo {
+func (t *Test01) Unwrap() *Test01 {
 	_tx, ok := t.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: Todo is not a transactional entity")
+		panic("ent: Test01 is not a transactional entity")
 	}
 	t.config.driver = _tx.drv
 	return t
 }
 
 // String implements the fmt.Stringer.
-func (t *Todo) String() string {
+func (t *Test01) String() string {
 	var builder strings.Builder
-	builder.WriteString("Todo(")
+	builder.WriteString("Test01(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", t.ID))
 	builder.WriteString("text=")
 	builder.WriteString(t.Text)
@@ -208,7 +208,7 @@ func (t *Todo) String() string {
 
 // NamedChildren returns the Children named value or an error if the edge was not
 // loaded in eager-loading with this name.
-func (t *Todo) NamedChildren(name string) ([]*Todo, error) {
+func (t *Test01) NamedChildren(name string) ([]*Test01, error) {
 	if t.Edges.namedChildren == nil {
 		return nil, &NotLoadedError{edge: name}
 	}
@@ -219,16 +219,16 @@ func (t *Todo) NamedChildren(name string) ([]*Todo, error) {
 	return nodes, nil
 }
 
-func (t *Todo) appendNamedChildren(name string, edges ...*Todo) {
+func (t *Test01) appendNamedChildren(name string, edges ...*Test01) {
 	if t.Edges.namedChildren == nil {
-		t.Edges.namedChildren = make(map[string][]*Todo)
+		t.Edges.namedChildren = make(map[string][]*Test01)
 	}
 	if len(edges) == 0 {
-		t.Edges.namedChildren[name] = []*Todo{}
+		t.Edges.namedChildren[name] = []*Test01{}
 	} else {
 		t.Edges.namedChildren[name] = append(t.Edges.namedChildren[name], edges...)
 	}
 }
 
-// Todos is a parsable slice of Todo.
-type Todos []*Todo
+// Test01s is a parsable slice of Test01.
+type Test01s []*Test01

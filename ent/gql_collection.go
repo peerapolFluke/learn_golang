@@ -8,8 +8,143 @@ import (
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/pumy2517/ginent/ent/test01"
 	"github.com/pumy2517/ginent/ent/todo"
 )
+
+// CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
+func (t *Test01Query) CollectFields(ctx context.Context, satisfies ...string) (*Test01Query, error) {
+	fc := graphql.GetFieldContext(ctx)
+	if fc == nil {
+		return t, nil
+	}
+	if err := t.collectField(ctx, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
+		return nil, err
+	}
+	return t, nil
+}
+
+func (t *Test01Query) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
+	path = append([]string(nil), path...)
+	var (
+		unknownSeen    bool
+		fieldSeen      = make(map[string]struct{}, len(test01.Columns))
+		selectedFields = []string{test01.FieldID}
+	)
+	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
+		switch field.Name {
+		case "parent":
+			var (
+				alias = field.Alias
+				path  = append(path, alias)
+				query = (&Test01Client{config: t.config}).Query()
+			)
+			if err := query.collectField(ctx, opCtx, field, path, mayAddCondition(satisfies, test01Implementors)...); err != nil {
+				return err
+			}
+			t.withParent = query
+		case "children":
+			var (
+				alias = field.Alias
+				path  = append(path, alias)
+				query = (&Test01Client{config: t.config}).Query()
+			)
+			if err := query.collectField(ctx, opCtx, field, path, mayAddCondition(satisfies, test01Implementors)...); err != nil {
+				return err
+			}
+			t.WithNamedChildren(alias, func(wq *Test01Query) {
+				*wq = *query
+			})
+		case "text":
+			if _, ok := fieldSeen[test01.FieldText]; !ok {
+				selectedFields = append(selectedFields, test01.FieldText)
+				fieldSeen[test01.FieldText] = struct{}{}
+			}
+		case "createdAt":
+			if _, ok := fieldSeen[test01.FieldCreatedAt]; !ok {
+				selectedFields = append(selectedFields, test01.FieldCreatedAt)
+				fieldSeen[test01.FieldCreatedAt] = struct{}{}
+			}
+		case "updateAt":
+			if _, ok := fieldSeen[test01.FieldUpdateAt]; !ok {
+				selectedFields = append(selectedFields, test01.FieldUpdateAt)
+				fieldSeen[test01.FieldUpdateAt] = struct{}{}
+			}
+		case "status":
+			if _, ok := fieldSeen[test01.FieldStatus]; !ok {
+				selectedFields = append(selectedFields, test01.FieldStatus)
+				fieldSeen[test01.FieldStatus] = struct{}{}
+			}
+		case "priority":
+			if _, ok := fieldSeen[test01.FieldPriority]; !ok {
+				selectedFields = append(selectedFields, test01.FieldPriority)
+				fieldSeen[test01.FieldPriority] = struct{}{}
+			}
+		case "id":
+		case "__typename":
+		default:
+			unknownSeen = true
+		}
+	}
+	if !unknownSeen {
+		t.Select(selectedFields...)
+	}
+	return nil
+}
+
+type test01PaginateArgs struct {
+	first, last   *int
+	after, before *Cursor
+	opts          []Test01PaginateOption
+}
+
+func newTest01PaginateArgs(rv map[string]any) *test01PaginateArgs {
+	args := &test01PaginateArgs{}
+	if rv == nil {
+		return args
+	}
+	if v := rv[firstField]; v != nil {
+		args.first = v.(*int)
+	}
+	if v := rv[lastField]; v != nil {
+		args.last = v.(*int)
+	}
+	if v := rv[afterField]; v != nil {
+		args.after = v.(*Cursor)
+	}
+	if v := rv[beforeField]; v != nil {
+		args.before = v.(*Cursor)
+	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case []*Test01Order:
+			args.opts = append(args.opts, WithTest01Order(v))
+		case []any:
+			var orders []*Test01Order
+			for i := range v {
+				mv, ok := v[i].(map[string]any)
+				if !ok {
+					continue
+				}
+				var (
+					err1, err2 error
+					order      = &Test01Order{Field: &Test01OrderField{}, Direction: entgql.OrderDirectionAsc}
+				)
+				if d, ok := mv[directionField]; ok {
+					err1 = order.Direction.UnmarshalGQL(d)
+				}
+				if f, ok := mv[fieldField]; ok {
+					err2 = order.Field.UnmarshalGQL(f)
+				}
+				if err1 == nil && err2 == nil {
+					orders = append(orders, order)
+				}
+			}
+			args.opts = append(args.opts, WithTest01Order(orders))
+		}
+	}
+	return args
+}
 
 // CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
 func (t *TodoQuery) CollectFields(ctx context.Context, satisfies ...string) (*TodoQuery, error) {
@@ -63,6 +198,11 @@ func (t *TodoQuery) collectField(ctx context.Context, opCtx *graphql.OperationCo
 			if _, ok := fieldSeen[todo.FieldCreatedAt]; !ok {
 				selectedFields = append(selectedFields, todo.FieldCreatedAt)
 				fieldSeen[todo.FieldCreatedAt] = struct{}{}
+			}
+		case "updateAt":
+			if _, ok := fieldSeen[todo.FieldUpdateAt]; !ok {
+				selectedFields = append(selectedFields, todo.FieldUpdateAt)
+				fieldSeen[todo.FieldUpdateAt] = struct{}{}
 			}
 		case "status":
 			if _, ok := fieldSeen[todo.FieldStatus]; !ok {

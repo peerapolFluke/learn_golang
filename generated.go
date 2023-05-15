@@ -17,6 +17,7 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
 	"github.com/pumy2517/ginent/ent"
+	"github.com/pumy2517/ginent/ent/test01"
 	"github.com/pumy2517/ginent/ent/todo"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
@@ -49,7 +50,8 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Mutation struct {
-		CreateTodo func(childComplexity int, input ent.CreateTodoInput) int
+		CreateTest01 func(childComplexity int, input ent.CreateTest01Input) int
+		CreateTodo   func(childComplexity int, input ent.CreateTodoInput) int
 	}
 
 	PageInfo struct {
@@ -60,9 +62,32 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Node  func(childComplexity int, id int) int
-		Nodes func(childComplexity int, ids []int) int
-		Todos func(childComplexity int, after *entgql.Cursor[int], first *int, before *entgql.Cursor[int], last *int, orderBy []*ent.TodoOrder) int
+		Node    func(childComplexity int, id int) int
+		Nodes   func(childComplexity int, ids []int) int
+		Test01s func(childComplexity int, after *entgql.Cursor[int], first *int, before *entgql.Cursor[int], last *int, orderBy []*ent.Test01Order) int
+		Todos   func(childComplexity int, after *entgql.Cursor[int], first *int, before *entgql.Cursor[int], last *int, orderBy []*ent.TodoOrder) int
+	}
+
+	Test01 struct {
+		Children  func(childComplexity int) int
+		CreatedAt func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Parent    func(childComplexity int) int
+		Priority  func(childComplexity int) int
+		Status    func(childComplexity int) int
+		Text      func(childComplexity int) int
+		UpdateAt  func(childComplexity int) int
+	}
+
+	Test01Connection struct {
+		Edges      func(childComplexity int) int
+		PageInfo   func(childComplexity int) int
+		TotalCount func(childComplexity int) int
+	}
+
+	Test01Edge struct {
+		Cursor func(childComplexity int) int
+		Node   func(childComplexity int) int
 	}
 
 	Todo struct {
@@ -73,6 +98,7 @@ type ComplexityRoot struct {
 		Priority  func(childComplexity int) int
 		Status    func(childComplexity int) int
 		Text      func(childComplexity int) int
+		UpdateAt  func(childComplexity int) int
 	}
 
 	TodoConnection struct {
@@ -89,10 +115,12 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateTodo(ctx context.Context, input ent.CreateTodoInput) (*ent.Todo, error)
+	CreateTest01(ctx context.Context, input ent.CreateTest01Input) (*ent.Test01, error)
 }
 type QueryResolver interface {
 	Node(ctx context.Context, id int) (ent.Noder, error)
 	Nodes(ctx context.Context, ids []int) ([]ent.Noder, error)
+	Test01s(ctx context.Context, after *entgql.Cursor[int], first *int, before *entgql.Cursor[int], last *int, orderBy []*ent.Test01Order) (*ent.Test01Connection, error)
 	Todos(ctx context.Context, after *entgql.Cursor[int], first *int, before *entgql.Cursor[int], last *int, orderBy []*ent.TodoOrder) (*ent.TodoConnection, error)
 }
 
@@ -110,6 +138,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "Mutation.createTest01":
+		if e.complexity.Mutation.CreateTest01 == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createTest01_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateTest01(childComplexity, args["input"].(ent.CreateTest01Input)), true
 
 	case "Mutation.createTodo":
 		if e.complexity.Mutation.CreateTodo == nil {
@@ -175,6 +215,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Nodes(childComplexity, args["ids"].([]int)), true
 
+	case "Query.test01s":
+		if e.complexity.Query.Test01s == nil {
+			break
+		}
+
+		args, err := ec.field_Query_test01s_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Test01s(childComplexity, args["after"].(*entgql.Cursor[int]), args["first"].(*int), args["before"].(*entgql.Cursor[int]), args["last"].(*int), args["orderBy"].([]*ent.Test01Order)), true
+
 	case "Query.todos":
 		if e.complexity.Query.Todos == nil {
 			break
@@ -186,6 +238,97 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Todos(childComplexity, args["after"].(*entgql.Cursor[int]), args["first"].(*int), args["before"].(*entgql.Cursor[int]), args["last"].(*int), args["orderBy"].([]*ent.TodoOrder)), true
+
+	case "Test01.children":
+		if e.complexity.Test01.Children == nil {
+			break
+		}
+
+		return e.complexity.Test01.Children(childComplexity), true
+
+	case "Test01.createdAt":
+		if e.complexity.Test01.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.Test01.CreatedAt(childComplexity), true
+
+	case "Test01.id":
+		if e.complexity.Test01.ID == nil {
+			break
+		}
+
+		return e.complexity.Test01.ID(childComplexity), true
+
+	case "Test01.parent":
+		if e.complexity.Test01.Parent == nil {
+			break
+		}
+
+		return e.complexity.Test01.Parent(childComplexity), true
+
+	case "Test01.priority":
+		if e.complexity.Test01.Priority == nil {
+			break
+		}
+
+		return e.complexity.Test01.Priority(childComplexity), true
+
+	case "Test01.status":
+		if e.complexity.Test01.Status == nil {
+			break
+		}
+
+		return e.complexity.Test01.Status(childComplexity), true
+
+	case "Test01.text":
+		if e.complexity.Test01.Text == nil {
+			break
+		}
+
+		return e.complexity.Test01.Text(childComplexity), true
+
+	case "Test01.updateAt":
+		if e.complexity.Test01.UpdateAt == nil {
+			break
+		}
+
+		return e.complexity.Test01.UpdateAt(childComplexity), true
+
+	case "Test01Connection.edges":
+		if e.complexity.Test01Connection.Edges == nil {
+			break
+		}
+
+		return e.complexity.Test01Connection.Edges(childComplexity), true
+
+	case "Test01Connection.pageInfo":
+		if e.complexity.Test01Connection.PageInfo == nil {
+			break
+		}
+
+		return e.complexity.Test01Connection.PageInfo(childComplexity), true
+
+	case "Test01Connection.totalCount":
+		if e.complexity.Test01Connection.TotalCount == nil {
+			break
+		}
+
+		return e.complexity.Test01Connection.TotalCount(childComplexity), true
+
+	case "Test01Edge.cursor":
+		if e.complexity.Test01Edge.Cursor == nil {
+			break
+		}
+
+		return e.complexity.Test01Edge.Cursor(childComplexity), true
+
+	case "Test01Edge.node":
+		if e.complexity.Test01Edge.Node == nil {
+			break
+		}
+
+		return e.complexity.Test01Edge.Node(childComplexity), true
 
 	case "Todo.children":
 		if e.complexity.Todo.Children == nil {
@@ -236,6 +379,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Todo.Text(childComplexity), true
 
+	case "Todo.updateAt":
+		if e.complexity.Todo.UpdateAt == nil {
+			break
+		}
+
+		return e.complexity.Todo.UpdateAt(childComplexity), true
+
 	case "TodoConnection.edges":
 		if e.complexity.TodoConnection.Edges == nil {
 			break
@@ -279,7 +429,9 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	rc := graphql.GetOperationContext(ctx)
 	ec := executionContext{rc, e}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputCreateTest01Input,
 		ec.unmarshalInputCreateTodoInput,
+		ec.unmarshalInputTest01Order,
 		ec.unmarshalInputTodoOrder,
 	)
 	first := true
@@ -340,7 +492,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 	return introspection.WrapTypeFromDef(parsedSchema, parsedSchema.Types[name]), nil
 }
 
-//go:embed "ent.graphql" "feature/todo/todo.graphql"
+//go:embed "ent.graphql" "feature/test01/test01.graphql" "feature/todo/todo.graphql"
 var sourcesFS embed.FS
 
 func sourceData(filename string) string {
@@ -353,6 +505,7 @@ func sourceData(filename string) string {
 
 var sources = []*ast.Source{
 	{Name: "ent.graphql", Input: sourceData("ent.graphql"), BuiltIn: false},
+	{Name: "feature/test01/test01.graphql", Input: sourceData("feature/test01/test01.graphql"), BuiltIn: false},
 	{Name: "feature/todo/todo.graphql", Input: sourceData("feature/todo/todo.graphql"), BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -360,6 +513,21 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_createTest01_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 ent.CreateTest01Input
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateTest01Input2githubᚗcomᚋpumy2517ᚋginentᚋentᚐCreateTest01Input(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_createTodo_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -418,6 +586,57 @@ func (ec *executionContext) field_Query_nodes_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["ids"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_test01s_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *entgql.Cursor[int]
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg1, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg1
+	var arg2 *entgql.Cursor[int]
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg2, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 []*ent.Test01Order
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOTest01Order2ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Orderᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg4
 	return args, nil
 }
 
@@ -552,6 +771,8 @@ func (ec *executionContext) fieldContext_Mutation_createTodo(ctx context.Context
 				return ec.fieldContext_Todo_text(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Todo_createdAt(ctx, field)
+			case "updateAt":
+				return ec.fieldContext_Todo_updateAt(ctx, field)
 			case "status":
 				return ec.fieldContext_Todo_status(ctx, field)
 			case "priority":
@@ -572,6 +793,76 @@ func (ec *executionContext) fieldContext_Mutation_createTodo(ctx context.Context
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createTodo_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createTest01(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createTest01(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateTest01(rctx, fc.Args["input"].(ent.CreateTest01Input))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*ent.Test01)
+	fc.Result = res
+	return ec.marshalOTest012ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createTest01(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Test01_id(ctx, field)
+			case "text":
+				return ec.fieldContext_Test01_text(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Test01_createdAt(ctx, field)
+			case "updateAt":
+				return ec.fieldContext_Test01_updateAt(ctx, field)
+			case "status":
+				return ec.fieldContext_Test01_status(ctx, field)
+			case "priority":
+				return ec.fieldContext_Test01_priority(ctx, field)
+			case "parent":
+				return ec.fieldContext_Test01_parent(ctx, field)
+			case "children":
+				return ec.fieldContext_Test01_children(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Test01", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createTest01_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -855,6 +1146,69 @@ func (ec *executionContext) fieldContext_Query_nodes(ctx context.Context, field 
 	return fc, nil
 }
 
+func (ec *executionContext) _Query_test01s(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_test01s(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Test01s(rctx, fc.Args["after"].(*entgql.Cursor[int]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[int]), fc.Args["last"].(*int), fc.Args["orderBy"].([]*ent.Test01Order))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.Test01Connection)
+	fc.Result = res
+	return ec.marshalNTest01Connection2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Connection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_test01s(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "edges":
+				return ec.fieldContext_Test01Connection_edges(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_Test01Connection_pageInfo(ctx, field)
+			case "totalCount":
+				return ec.fieldContext_Test01Connection_totalCount(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Test01Connection", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_test01s_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query_todos(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_todos(ctx, field)
 	if err != nil {
@@ -1047,6 +1401,636 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 	return fc, nil
 }
 
+func (ec *executionContext) _Test01_id(ctx context.Context, field graphql.CollectedField, obj *ent.Test01) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Test01_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNID2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Test01_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Test01",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Test01_text(ctx context.Context, field graphql.CollectedField, obj *ent.Test01) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Test01_text(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Text, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Test01_text(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Test01",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Test01_createdAt(ctx context.Context, field graphql.CollectedField, obj *ent.Test01) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Test01_createdAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Test01_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Test01",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Test01_updateAt(ctx context.Context, field graphql.CollectedField, obj *ent.Test01) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Test01_updateAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdateAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Test01_updateAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Test01",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Test01_status(ctx context.Context, field graphql.CollectedField, obj *ent.Test01) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Test01_status(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(test01.Status)
+	fc.Result = res
+	return ec.marshalNTest01Status2githubᚗcomᚋpumy2517ᚋginentᚋentᚋtest01ᚐStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Test01_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Test01",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Test01Status does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Test01_priority(ctx context.Context, field graphql.CollectedField, obj *ent.Test01) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Test01_priority(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Priority, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Test01_priority(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Test01",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Test01_parent(ctx context.Context, field graphql.CollectedField, obj *ent.Test01) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Test01_parent(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Parent(ctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*ent.Test01)
+	fc.Result = res
+	return ec.marshalOTest012ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Test01_parent(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Test01",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Test01_id(ctx, field)
+			case "text":
+				return ec.fieldContext_Test01_text(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Test01_createdAt(ctx, field)
+			case "updateAt":
+				return ec.fieldContext_Test01_updateAt(ctx, field)
+			case "status":
+				return ec.fieldContext_Test01_status(ctx, field)
+			case "priority":
+				return ec.fieldContext_Test01_priority(ctx, field)
+			case "parent":
+				return ec.fieldContext_Test01_parent(ctx, field)
+			case "children":
+				return ec.fieldContext_Test01_children(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Test01", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Test01_children(ctx context.Context, field graphql.CollectedField, obj *ent.Test01) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Test01_children(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Children(ctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*ent.Test01)
+	fc.Result = res
+	return ec.marshalOTest012ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01ᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Test01_children(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Test01",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Test01_id(ctx, field)
+			case "text":
+				return ec.fieldContext_Test01_text(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Test01_createdAt(ctx, field)
+			case "updateAt":
+				return ec.fieldContext_Test01_updateAt(ctx, field)
+			case "status":
+				return ec.fieldContext_Test01_status(ctx, field)
+			case "priority":
+				return ec.fieldContext_Test01_priority(ctx, field)
+			case "parent":
+				return ec.fieldContext_Test01_parent(ctx, field)
+			case "children":
+				return ec.fieldContext_Test01_children(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Test01", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Test01Connection_edges(ctx context.Context, field graphql.CollectedField, obj *ent.Test01Connection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Test01Connection_edges(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Edges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*ent.Test01Edge)
+	fc.Result = res
+	return ec.marshalOTest01Edge2ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Edge(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Test01Connection_edges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Test01Connection",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "node":
+				return ec.fieldContext_Test01Edge_node(ctx, field)
+			case "cursor":
+				return ec.fieldContext_Test01Edge_cursor(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Test01Edge", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Test01Connection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *ent.Test01Connection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Test01Connection_pageInfo(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PageInfo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(entgql.PageInfo[int])
+	fc.Result = res
+	return ec.marshalNPageInfo2entgoᚗioᚋcontribᚋentgqlᚐPageInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Test01Connection_pageInfo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Test01Connection",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "hasNextPage":
+				return ec.fieldContext_PageInfo_hasNextPage(ctx, field)
+			case "hasPreviousPage":
+				return ec.fieldContext_PageInfo_hasPreviousPage(ctx, field)
+			case "startCursor":
+				return ec.fieldContext_PageInfo_startCursor(ctx, field)
+			case "endCursor":
+				return ec.fieldContext_PageInfo_endCursor(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PageInfo", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Test01Connection_totalCount(ctx context.Context, field graphql.CollectedField, obj *ent.Test01Connection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Test01Connection_totalCount(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalCount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Test01Connection_totalCount(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Test01Connection",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Test01Edge_node(ctx context.Context, field graphql.CollectedField, obj *ent.Test01Edge) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Test01Edge_node(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Node, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*ent.Test01)
+	fc.Result = res
+	return ec.marshalOTest012ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Test01Edge_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Test01Edge",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Test01_id(ctx, field)
+			case "text":
+				return ec.fieldContext_Test01_text(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Test01_createdAt(ctx, field)
+			case "updateAt":
+				return ec.fieldContext_Test01_updateAt(ctx, field)
+			case "status":
+				return ec.fieldContext_Test01_status(ctx, field)
+			case "priority":
+				return ec.fieldContext_Test01_priority(ctx, field)
+			case "parent":
+				return ec.fieldContext_Test01_parent(ctx, field)
+			case "children":
+				return ec.fieldContext_Test01_children(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Test01", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Test01Edge_cursor(ctx context.Context, field graphql.CollectedField, obj *ent.Test01Edge) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Test01Edge_cursor(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(entgql.Cursor[int])
+	fc.Result = res
+	return ec.marshalNCursor2entgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Test01Edge_cursor(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Test01Edge",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Cursor does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Todo_id(ctx context.Context, field graphql.CollectedField, obj *ent.Todo) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Todo_id(ctx, field)
 	if err != nil {
@@ -1167,6 +2151,50 @@ func (ec *executionContext) _Todo_createdAt(ctx context.Context, field graphql.C
 }
 
 func (ec *executionContext) fieldContext_Todo_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Todo",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Todo_updateAt(ctx context.Context, field graphql.CollectedField, obj *ent.Todo) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Todo_updateAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdateAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Todo_updateAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Todo",
 		Field:      field,
@@ -1309,6 +2337,8 @@ func (ec *executionContext) fieldContext_Todo_parent(ctx context.Context, field 
 				return ec.fieldContext_Todo_text(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Todo_createdAt(ctx, field)
+			case "updateAt":
+				return ec.fieldContext_Todo_updateAt(ctx, field)
 			case "status":
 				return ec.fieldContext_Todo_status(ctx, field)
 			case "priority":
@@ -1366,6 +2396,8 @@ func (ec *executionContext) fieldContext_Todo_children(ctx context.Context, fiel
 				return ec.fieldContext_Todo_text(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Todo_createdAt(ctx, field)
+			case "updateAt":
+				return ec.fieldContext_Todo_updateAt(ctx, field)
 			case "status":
 				return ec.fieldContext_Todo_status(ctx, field)
 			case "priority":
@@ -1568,6 +2600,8 @@ func (ec *executionContext) fieldContext_TodoEdge_node(ctx context.Context, fiel
 				return ec.fieldContext_Todo_text(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Todo_createdAt(ctx, field)
+			case "updateAt":
+				return ec.fieldContext_Todo_updateAt(ctx, field)
 			case "status":
 				return ec.fieldContext_Todo_status(ctx, field)
 			case "priority":
@@ -3400,14 +4434,14 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(ctx context.Conte
 
 // region    **************************** input.gotpl *****************************
 
-func (ec *executionContext) unmarshalInputCreateTodoInput(ctx context.Context, obj interface{}) (ent.CreateTodoInput, error) {
-	var it ent.CreateTodoInput
+func (ec *executionContext) unmarshalInputCreateTest01Input(ctx context.Context, obj interface{}) (ent.CreateTest01Input, error) {
+	var it ent.CreateTest01Input
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"text", "createdAt", "status", "priority", "parentID", "childIDs"}
+	fieldsInOrder := [...]string{"text", "createdAt", "updateAt", "status", "priority", "parentID", "childIDs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -3432,6 +4466,98 @@ func (ec *executionContext) unmarshalInputCreateTodoInput(ctx context.Context, o
 				return it, err
 			}
 			it.CreatedAt = data
+		case "updateAt":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updateAt"))
+			data, err := ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdateAt = data
+		case "status":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+			data, err := ec.unmarshalOTest01Status2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚋtest01ᚐStatus(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Status = data
+		case "priority":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("priority"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Priority = data
+		case "parentID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentID"))
+			data, err := ec.unmarshalOID2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ParentID = data
+		case "childIDs":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("childIDs"))
+			data, err := ec.unmarshalOID2ᚕintᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ChildIDs = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCreateTodoInput(ctx context.Context, obj interface{}) (ent.CreateTodoInput, error) {
+	var it ent.CreateTodoInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"text", "createdAt", "updateAt", "status", "priority", "parentID", "childIDs"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "text":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("text"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Text = data
+		case "createdAt":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdAt"))
+			data, err := ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CreatedAt = data
+		case "updateAt":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updateAt"))
+			data, err := ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UpdateAt = data
 		case "status":
 			var err error
 
@@ -3468,6 +4594,48 @@ func (ec *executionContext) unmarshalInputCreateTodoInput(ctx context.Context, o
 				return it, err
 			}
 			it.ChildIDs = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputTest01Order(ctx context.Context, obj interface{}) (ent.Test01Order, error) {
+	var it ent.Test01Order
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	if _, present := asMap["direction"]; !present {
+		asMap["direction"] = "ASC"
+	}
+
+	fieldsInOrder := [...]string{"direction", "field"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "direction":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("direction"))
+			data, err := ec.unmarshalNOrderDirection2entgoᚗioᚋcontribᚋentgqlᚐOrderDirection(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Direction = data
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			data, err := ec.unmarshalNTest01OrderField2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01OrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Field = data
 		}
 	}
 
@@ -3524,6 +4692,11 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
+	case *ent.Test01:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._Test01(ctx, sel, obj)
 	case *ent.Todo:
 		if obj == nil {
 			return graphql.Null
@@ -3561,6 +4734,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createTodo(ctx, field)
+			})
+
+		case "createTest01":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createTest01(ctx, field)
 			})
 
 		default:
@@ -3679,6 +4858,29 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		case "test01s":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_test01s(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "todos":
 			field := field
 
@@ -3725,6 +4927,174 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
+var test01Implementors = []string{"Test01", "Node"}
+
+func (ec *executionContext) _Test01(ctx context.Context, sel ast.SelectionSet, obj *ent.Test01) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, test01Implementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Test01")
+		case "id":
+
+			out.Values[i] = ec._Test01_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "text":
+
+			out.Values[i] = ec._Test01_text(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "createdAt":
+
+			out.Values[i] = ec._Test01_createdAt(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "updateAt":
+
+			out.Values[i] = ec._Test01_updateAt(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "status":
+
+			out.Values[i] = ec._Test01_status(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "priority":
+
+			out.Values[i] = ec._Test01_priority(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "parent":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Test01_parent(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "children":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Test01_children(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var test01ConnectionImplementors = []string{"Test01Connection"}
+
+func (ec *executionContext) _Test01Connection(ctx context.Context, sel ast.SelectionSet, obj *ent.Test01Connection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, test01ConnectionImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Test01Connection")
+		case "edges":
+
+			out.Values[i] = ec._Test01Connection_edges(ctx, field, obj)
+
+		case "pageInfo":
+
+			out.Values[i] = ec._Test01Connection_pageInfo(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "totalCount":
+
+			out.Values[i] = ec._Test01Connection_totalCount(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var test01EdgeImplementors = []string{"Test01Edge"}
+
+func (ec *executionContext) _Test01Edge(ctx context.Context, sel ast.SelectionSet, obj *ent.Test01Edge) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, test01EdgeImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Test01Edge")
+		case "node":
+
+			out.Values[i] = ec._Test01Edge_node(ctx, field, obj)
+
+		case "cursor":
+
+			out.Values[i] = ec._Test01Edge_cursor(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var todoImplementors = []string{"Todo", "Node"}
 
 func (ec *executionContext) _Todo(ctx context.Context, sel ast.SelectionSet, obj *ent.Todo) graphql.Marshaler {
@@ -3752,6 +5122,13 @@ func (ec *executionContext) _Todo(ctx context.Context, sel ast.SelectionSet, obj
 		case "createdAt":
 
 			out.Values[i] = ec._Todo_createdAt(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "updateAt":
+
+			out.Values[i] = ec._Todo_updateAt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
@@ -4219,6 +5596,11 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) unmarshalNCreateTest01Input2githubᚗcomᚋpumy2517ᚋginentᚋentᚐCreateTest01Input(ctx context.Context, v interface{}) (ent.CreateTest01Input, error) {
+	res, err := ec.unmarshalInputCreateTest01Input(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreateTodoInput2githubᚗcomᚋpumy2517ᚋginentᚋentᚐCreateTodoInput(ctx context.Context, v interface{}) (ent.CreateTodoInput, error) {
 	res, err := ec.unmarshalInputCreateTodoInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -4361,6 +5743,61 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNTest012ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01(ctx context.Context, sel ast.SelectionSet, v *ent.Test01) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Test01(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNTest01Connection2githubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Connection(ctx context.Context, sel ast.SelectionSet, v ent.Test01Connection) graphql.Marshaler {
+	return ec._Test01Connection(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNTest01Connection2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Connection(ctx context.Context, sel ast.SelectionSet, v *ent.Test01Connection) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Test01Connection(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNTest01Order2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Order(ctx context.Context, v interface{}) (*ent.Test01Order, error) {
+	res, err := ec.unmarshalInputTest01Order(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNTest01OrderField2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01OrderField(ctx context.Context, v interface{}) (*ent.Test01OrderField, error) {
+	var res = new(ent.Test01OrderField)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTest01OrderField2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01OrderField(ctx context.Context, sel ast.SelectionSet, v *ent.Test01OrderField) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return v
+}
+
+func (ec *executionContext) unmarshalNTest01Status2githubᚗcomᚋpumy2517ᚋginentᚋentᚋtest01ᚐStatus(ctx context.Context, v interface{}) (test01.Status, error) {
+	var res test01.Status
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTest01Status2githubᚗcomᚋpumy2517ᚋginentᚋentᚋtest01ᚐStatus(ctx context.Context, sel ast.SelectionSet, v test01.Status) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {
@@ -4857,6 +6294,144 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	}
 	res := graphql.MarshalString(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOTest012ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01ᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.Test01) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNTest012ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalOTest012ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01(ctx context.Context, sel ast.SelectionSet, v *ent.Test01) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Test01(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOTest01Edge2ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Edge(ctx context.Context, sel ast.SelectionSet, v []*ent.Test01Edge) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOTest01Edge2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Edge(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOTest01Edge2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Edge(ctx context.Context, sel ast.SelectionSet, v *ent.Test01Edge) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Test01Edge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOTest01Order2ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Orderᚄ(ctx context.Context, v interface{}) ([]*ent.Test01Order, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*ent.Test01Order, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNTest01Order2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Order(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalOTest01Status2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚋtest01ᚐStatus(ctx context.Context, v interface{}) (*test01.Status, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(test01.Status)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOTest01Status2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚋtest01ᚐStatus(ctx context.Context, sel ast.SelectionSet, v *test01.Status) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) unmarshalOTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {

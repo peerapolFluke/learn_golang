@@ -14,6 +14,7 @@ import (
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/hashicorp/go-multierror"
+	"github.com/pumy2517/ginent/ent/test01"
 	"github.com/pumy2517/ginent/ent/todo"
 	"golang.org/x/sync/semaphore"
 )
@@ -22,6 +23,11 @@ import (
 type Noder interface {
 	IsNode()
 }
+
+var test01Implementors = []string{"Test01", "Node"}
+
+// IsNode implements the Node interface check for GQLGen.
+func (*Test01) IsNode() {}
 
 var todoImplementors = []string{"Todo", "Node"}
 
@@ -86,6 +92,18 @@ func (c *Client) Noder(ctx context.Context, id int, opts ...NodeOption) (_ Noder
 
 func (c *Client) noder(ctx context.Context, table string, id int) (Noder, error) {
 	switch table {
+	case test01.Table:
+		query := c.Test01.Query().
+			Where(test01.ID(id))
+		query, err := query.CollectFields(ctx, test01Implementors...)
+		if err != nil {
+			return nil, err
+		}
+		n, err := query.Only(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return n, nil
 	case todo.Table:
 		query := c.Todo.Query().
 			Where(todo.ID(id))
@@ -171,6 +189,22 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 		idmap[id] = append(idmap[id], &noders[i])
 	}
 	switch table {
+	case test01.Table:
+		query := c.Test01.Query().
+			Where(test01.IDIn(ids...))
+		query, err := query.CollectFields(ctx, test01Implementors...)
+		if err != nil {
+			return nil, err
+		}
+		nodes, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, node := range nodes {
+			for _, noder := range idmap[node.ID] {
+				*noder = node
+			}
+		}
 	case todo.Table:
 		query := c.Todo.Query().
 			Where(todo.IDIn(ids...))

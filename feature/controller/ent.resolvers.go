@@ -1,4 +1,4 @@
-package ginent
+package controller
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -6,8 +6,10 @@ package ginent
 
 import (
 	"context"
+	"fmt"
 
 	"entgo.io/contrib/entgql"
+	"github.com/pumy2517/ginent"
 	"github.com/pumy2517/ginent/ent"
 )
 
@@ -21,16 +23,21 @@ func (r *queryResolver) Nodes(ctx context.Context, ids []int) ([]ent.Noder, erro
 	return r.client.Noders(ctx, ids)
 }
 
+// Test01s is the resolver for the test01s field.
+func (r *queryResolver) Test01s(ctx context.Context, after *entgql.Cursor[int], first *int, before *entgql.Cursor[int], last *int, orderBy []*ent.Test01Order) (*ent.Test01Connection, error) {
+	panic(fmt.Errorf("not implemented: Test01s - test01s"))
+}
+
 // Todos is the resolver for the todos field.
 func (r *queryResolver) Todos(ctx context.Context, after *entgql.Cursor[int], first *int, before *entgql.Cursor[int], last *int, orderBy []*ent.TodoOrder) (*ent.TodoConnection, error) {
 	// return todo.GetTodo(&ctx, r.client)
 	return r.client.Todo.Query().
 		Paginate(ctx, after, first, before, last,
 			ent.WithTodoOrder(orderBy),
-		)
+		) // panic(fmt.Errorf("not implemented: Todos - todos"))
 }
 
-// Query returns QueryResolver implementation.
-func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
+// Query returns ginent.QueryResolver implementation.
+func (r *Resolver) Query() ginent.QueryResolver { return &queryResolver{r} }
 
 type queryResolver struct{ *Resolver }

@@ -65,6 +65,11 @@ func CreatedAt(v time.Time) predicate.Todo {
 	return predicate.Todo(sql.FieldEQ(FieldCreatedAt, v))
 }
 
+// UpdateAt applies equality check predicate on the "update_at" field. It's identical to UpdateAtEQ.
+func UpdateAt(v time.Time) predicate.Todo {
+	return predicate.Todo(sql.FieldEQ(FieldUpdateAt, v))
+}
+
 // Priority applies equality check predicate on the "priority" field. It's identical to PriorityEQ.
 func Priority(v int) predicate.Todo {
 	return predicate.Todo(sql.FieldEQ(FieldPriority, v))
@@ -173,6 +178,46 @@ func CreatedAtLT(v time.Time) predicate.Todo {
 // CreatedAtLTE applies the LTE predicate on the "created_at" field.
 func CreatedAtLTE(v time.Time) predicate.Todo {
 	return predicate.Todo(sql.FieldLTE(FieldCreatedAt, v))
+}
+
+// UpdateAtEQ applies the EQ predicate on the "update_at" field.
+func UpdateAtEQ(v time.Time) predicate.Todo {
+	return predicate.Todo(sql.FieldEQ(FieldUpdateAt, v))
+}
+
+// UpdateAtNEQ applies the NEQ predicate on the "update_at" field.
+func UpdateAtNEQ(v time.Time) predicate.Todo {
+	return predicate.Todo(sql.FieldNEQ(FieldUpdateAt, v))
+}
+
+// UpdateAtIn applies the In predicate on the "update_at" field.
+func UpdateAtIn(vs ...time.Time) predicate.Todo {
+	return predicate.Todo(sql.FieldIn(FieldUpdateAt, vs...))
+}
+
+// UpdateAtNotIn applies the NotIn predicate on the "update_at" field.
+func UpdateAtNotIn(vs ...time.Time) predicate.Todo {
+	return predicate.Todo(sql.FieldNotIn(FieldUpdateAt, vs...))
+}
+
+// UpdateAtGT applies the GT predicate on the "update_at" field.
+func UpdateAtGT(v time.Time) predicate.Todo {
+	return predicate.Todo(sql.FieldGT(FieldUpdateAt, v))
+}
+
+// UpdateAtGTE applies the GTE predicate on the "update_at" field.
+func UpdateAtGTE(v time.Time) predicate.Todo {
+	return predicate.Todo(sql.FieldGTE(FieldUpdateAt, v))
+}
+
+// UpdateAtLT applies the LT predicate on the "update_at" field.
+func UpdateAtLT(v time.Time) predicate.Todo {
+	return predicate.Todo(sql.FieldLT(FieldUpdateAt, v))
+}
+
+// UpdateAtLTE applies the LTE predicate on the "update_at" field.
+func UpdateAtLTE(v time.Time) predicate.Todo {
+	return predicate.Todo(sql.FieldLTE(FieldUpdateAt, v))
 }
 
 // StatusEQ applies the EQ predicate on the "status" field.
