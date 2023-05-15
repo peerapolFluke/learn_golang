@@ -1,28 +1,40 @@
-# schema tells gqlgen where the GraphQL schema is located.
+# Where are all the schema files located? globs are supported eg  src/**/*.graphqls
 schema:
-  - ent.graphql
-  - feature/todo/todo.graphql
+  - graph/typeDefs/*.gql
 
-# resolver reports where the resolver implementations go.
+# Where should the generated server code go?
+exec:
+  filename: graph/generated.go
+  package: generated
+
+# Uncomment to enable federation
+# federation:
+#   filename: graph/federation.go
+#   package: graph
+
+# Where should any generated models go?
+model:
+  filename: graph/model/models_gen.go
+  package: model
+
+# Where should the resolver implementations go?
 resolver:
   layout: follow-schema
-  dir: .
+  dir: graph/resolvers
+  package: graph
+  filename_template: "{name}.resolvers.go"
 
-# gqlgen will search for any type names in the schema in these go packages
-# if they match it will use them, otherwise it will generate them.
-
-# autobind tells gqngen to search for any type names in the GraphQL schema in the
-# provided package. If they match it will use them, otherwise it will generate new.
 autobind:
-  - github.com/pumy2517/ginent/ent
-  - github.com/pumy2517/ginent/ent/todo
 
-# This section declares type mapping between the GraphQL and Go type systems.
 models:
-  # Defines the ID field as Go 'int'.
   ID:
     model:
-      - github.com/99designs/gqlgen/graphql.IntID
-  Node:
+      - github.com/99designs/gqlgen/graphql.ID
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32
+  Int:
     model:
-      - github.com/pumy2517/ginent/ent.Noder
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32
