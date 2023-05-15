@@ -16,6 +16,11 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input ent.CreateTodoI
 	return todo.CreateTodo(&ctx, r.client, &input) //
 }
 
+// GetTodoEiei is the resolver for the getTodoEiei field.
+func (r *queryResolver) GetTodoEiei(ctx context.Context) ([]*ent.Todo, error) {
+	return todo.GetTodo(&ctx, r.client) //
+}
+
 // Mutation returns ginent.MutationResolver implementation.
 func (r *Resolver) Mutation() ginent.MutationResolver { return &mutationResolver{r} }
 

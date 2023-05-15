@@ -1,3 +1,7 @@
 type Mutation {
   createTodo(input: CreateTodoInput!): Todo
 }
+
+extend type Query {
+  getTodoEiei: [Todo!]
+}
