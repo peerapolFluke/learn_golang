@@ -6,13 +6,13 @@ import (
 	"context"
 	"database/sql/driver"
 	"fmt"
+	"ginent/ent/predicate"
+	"ginent/ent/todo"
 	"math"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/pumy2517/ginent/ent/predicate"
-	"github.com/pumy2517/ginent/ent/todo"
 )
 
 // TodoQuery is the builder for querying Todo entities.

@@ -3,11 +3,10 @@
 package ent
 
 import (
+	"ginent/ent/schema"
+	"ginent/ent/test01"
+	"ginent/ent/todo"
 	"time"
-
-	"github.com/pumy2517/ginent/ent/schema"
-	"github.com/pumy2517/ginent/ent/test01"
-	"github.com/pumy2517/ginent/ent/todo"
 )
 
 // The init function reads all schema descriptors with runtime code

@@ -6,12 +6,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"ginent/ent/predicate"
+	"ginent/ent/test01"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/pumy2517/ginent/ent/predicate"
-	"github.com/pumy2517/ginent/ent/test01"
 )
 
 // Test01Update is the builder for updating Test01 entities.

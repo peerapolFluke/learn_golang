@@ -5,8 +5,7 @@ package hook
 import (
 	"context"
 	"fmt"
-
-	"github.com/pumy2517/ginent/ent"
+	"ginent/ent"
 )
 
 // The Test01Func type is an adapter to allow the use of ordinary

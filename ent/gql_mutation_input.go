@@ -3,10 +3,9 @@
 package ent
 
 import (
+	"ginent/ent/test01"
+	"ginent/ent/todo"
 	"time"
-
-	"github.com/pumy2517/ginent/ent/test01"
-	"github.com/pumy2517/ginent/ent/todo"
 )
 
 // CreateTest01Input represents a mutation input for creating test01s.

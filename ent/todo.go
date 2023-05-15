@@ -4,12 +4,12 @@ package ent
 
 import (
 	"fmt"
+	"ginent/ent/todo"
 	"strings"
 	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/pumy2517/ginent/ent/todo"
 )
 
 // Todo is the model entity for the Todo schema.

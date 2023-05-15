@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/pumy2517/ginent/ent"
+	"ginent/ent"
 )
 
 func GetTest01(ctx *context.Context, client *ent.Client) ([]*ent.Test01, error) {

@@ -35,7 +35,7 @@ scalar Cursor
 An object with an ID.
 Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
 """
-interface Node @goModel(model: "github.com/pumy2517/ginent/ent.Noder") {
+interface Node @goModel(model: "ginent/ent.Noder") {
   """The id of the object."""
   id: ID!
 }
@@ -147,7 +147,7 @@ enum Test01OrderField {
   PARENT_PRIORITY
 }
 """Test01Status is enum for the field status"""
-enum Test01Status @goModel(model: "github.com/pumy2517/ginent/ent/test01.Status") {
+enum Test01Status @goModel(model: "ginent/ent/test01.Status") {
   IN_PROGRESS
   COMPLETED
 }
@@ -196,7 +196,7 @@ enum TodoOrderField {
   PARENT_PRIORITY
 }
 """TodoStatus is enum for the field status"""
-enum TodoStatus @goModel(model: "github.com/pumy2517/ginent/ent/todo.Status") {
+enum TodoStatus @goModel(model: "ginent/ent/todo.Status") {
   IN_PROGRESS
   COMPLETED
 }

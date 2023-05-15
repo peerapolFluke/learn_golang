@@ -8,6 +8,9 @@ import (
 	"embed"
 	"errors"
 	"fmt"
+	"ginent/ent"
+	"ginent/ent/test01"
+	"ginent/ent/todo"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -16,9 +19,6 @@ import (
 	"entgo.io/contrib/entgql"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/pumy2517/ginent/ent"
-	"github.com/pumy2517/ginent/ent/test01"
-	"github.com/pumy2517/ginent/ent/todo"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -520,7 +520,7 @@ func (ec *executionContext) field_Mutation_createTest01_args(ctx context.Context
 	var arg0 ent.CreateTest01Input
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateTest01Input2githubᚗcomᚋpumy2517ᚋginentᚋentᚐCreateTest01Input(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateTest01Input2ginentᚋentᚐCreateTest01Input(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -535,7 +535,7 @@ func (ec *executionContext) field_Mutation_createTodo_args(ctx context.Context, 
 	var arg0 ent.CreateTodoInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateTodoInput2githubᚗcomᚋpumy2517ᚋginentᚋentᚐCreateTodoInput(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateTodoInput2ginentᚋentᚐCreateTodoInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -631,7 +631,7 @@ func (ec *executionContext) field_Query_test01s_args(ctx context.Context, rawArg
 	var arg4 []*ent.Test01Order
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOTest01Order2ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Orderᚄ(ctx, tmp)
+		arg4, err = ec.unmarshalOTest01Order2ᚕᚖginentᚋentᚐTest01Orderᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -682,7 +682,7 @@ func (ec *executionContext) field_Query_todos_args(ctx context.Context, rawArgs 
 	var arg4 []*ent.TodoOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOTodoOrder2ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoOrderᚄ(ctx, tmp)
+		arg4, err = ec.unmarshalOTodoOrder2ᚕᚖginentᚋentᚐTodoOrderᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -754,7 +754,7 @@ func (ec *executionContext) _Mutation_createTodo(ctx context.Context, field grap
 	}
 	res := resTmp.(*ent.Todo)
 	fc.Result = res
-	return ec.marshalOTodo2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodo(ctx, field.Selections, res)
+	return ec.marshalOTodo2ᚖginentᚋentᚐTodo(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createTodo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -824,7 +824,7 @@ func (ec *executionContext) _Mutation_createTest01(ctx context.Context, field gr
 	}
 	res := resTmp.(*ent.Test01)
 	fc.Result = res
-	return ec.marshalOTest012ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01(ctx, field.Selections, res)
+	return ec.marshalOTest012ᚖginentᚋentᚐTest01(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createTest01(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1064,7 +1064,7 @@ func (ec *executionContext) _Query_node(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(ent.Noder)
 	fc.Result = res
-	return ec.marshalONode2githubᚗcomᚋpumy2517ᚋginentᚋentᚐNoder(ctx, field.Selections, res)
+	return ec.marshalONode2ginentᚋentᚐNoder(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1119,7 +1119,7 @@ func (ec *executionContext) _Query_nodes(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.([]ent.Noder)
 	fc.Result = res
-	return ec.marshalNNode2ᚕgithubᚗcomᚋpumy2517ᚋginentᚋentᚐNoder(ctx, field.Selections, res)
+	return ec.marshalNNode2ᚕginentᚋentᚐNoder(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_nodes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1174,7 +1174,7 @@ func (ec *executionContext) _Query_test01s(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(*ent.Test01Connection)
 	fc.Result = res
-	return ec.marshalNTest01Connection2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Connection(ctx, field.Selections, res)
+	return ec.marshalNTest01Connection2ᚖginentᚋentᚐTest01Connection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_test01s(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1237,7 +1237,7 @@ func (ec *executionContext) _Query_todos(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*ent.TodoConnection)
 	fc.Result = res
-	return ec.marshalNTodoConnection2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoConnection(ctx, field.Selections, res)
+	return ec.marshalNTodoConnection2ᚖginentᚋentᚐTodoConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_todos(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1605,7 +1605,7 @@ func (ec *executionContext) _Test01_status(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(test01.Status)
 	fc.Result = res
-	return ec.marshalNTest01Status2githubᚗcomᚋpumy2517ᚋginentᚋentᚋtest01ᚐStatus(ctx, field.Selections, res)
+	return ec.marshalNTest01Status2ginentᚋentᚋtest01ᚐStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Test01_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1690,7 +1690,7 @@ func (ec *executionContext) _Test01_parent(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(*ent.Test01)
 	fc.Result = res
-	return ec.marshalOTest012ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01(ctx, field.Selections, res)
+	return ec.marshalOTest012ᚖginentᚋentᚐTest01(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Test01_parent(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1749,7 +1749,7 @@ func (ec *executionContext) _Test01_children(ctx context.Context, field graphql.
 	}
 	res := resTmp.([]*ent.Test01)
 	fc.Result = res
-	return ec.marshalOTest012ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01ᚄ(ctx, field.Selections, res)
+	return ec.marshalOTest012ᚕᚖginentᚋentᚐTest01ᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Test01_children(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1808,7 +1808,7 @@ func (ec *executionContext) _Test01Connection_edges(ctx context.Context, field g
 	}
 	res := resTmp.([]*ent.Test01Edge)
 	fc.Result = res
-	return ec.marshalOTest01Edge2ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Edge(ctx, field.Selections, res)
+	return ec.marshalOTest01Edge2ᚕᚖginentᚋentᚐTest01Edge(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Test01Connection_edges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1953,7 +1953,7 @@ func (ec *executionContext) _Test01Edge_node(ctx context.Context, field graphql.
 	}
 	res := resTmp.(*ent.Test01)
 	fc.Result = res
-	return ec.marshalOTest012ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01(ctx, field.Selections, res)
+	return ec.marshalOTest012ᚖginentᚋentᚐTest01(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Test01Edge_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2235,7 +2235,7 @@ func (ec *executionContext) _Todo_status(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(todo.Status)
 	fc.Result = res
-	return ec.marshalNTodoStatus2githubᚗcomᚋpumy2517ᚋginentᚋentᚋtodoᚐStatus(ctx, field.Selections, res)
+	return ec.marshalNTodoStatus2ginentᚋentᚋtodoᚐStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Todo_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2320,7 +2320,7 @@ func (ec *executionContext) _Todo_parent(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*ent.Todo)
 	fc.Result = res
-	return ec.marshalOTodo2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodo(ctx, field.Selections, res)
+	return ec.marshalOTodo2ᚖginentᚋentᚐTodo(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Todo_parent(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2379,7 +2379,7 @@ func (ec *executionContext) _Todo_children(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.([]*ent.Todo)
 	fc.Result = res
-	return ec.marshalOTodo2ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoᚄ(ctx, field.Selections, res)
+	return ec.marshalOTodo2ᚕᚖginentᚋentᚐTodoᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Todo_children(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2438,7 +2438,7 @@ func (ec *executionContext) _TodoConnection_edges(ctx context.Context, field gra
 	}
 	res := resTmp.([]*ent.TodoEdge)
 	fc.Result = res
-	return ec.marshalOTodoEdge2ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoEdge(ctx, field.Selections, res)
+	return ec.marshalOTodoEdge2ᚕᚖginentᚋentᚐTodoEdge(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TodoConnection_edges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2583,7 +2583,7 @@ func (ec *executionContext) _TodoEdge_node(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(*ent.Todo)
 	fc.Result = res
-	return ec.marshalOTodo2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodo(ctx, field.Selections, res)
+	return ec.marshalOTodo2ᚖginentᚋentᚐTodo(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TodoEdge_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4479,7 +4479,7 @@ func (ec *executionContext) unmarshalInputCreateTest01Input(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
-			data, err := ec.unmarshalOTest01Status2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚋtest01ᚐStatus(ctx, v)
+			data, err := ec.unmarshalOTest01Status2ᚖginentᚋentᚋtest01ᚐStatus(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4562,7 +4562,7 @@ func (ec *executionContext) unmarshalInputCreateTodoInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
-			data, err := ec.unmarshalOTodoStatus2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚋtodoᚐStatus(ctx, v)
+			data, err := ec.unmarshalOTodoStatus2ᚖginentᚋentᚋtodoᚐStatus(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4631,7 +4631,7 @@ func (ec *executionContext) unmarshalInputTest01Order(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			data, err := ec.unmarshalNTest01OrderField2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01OrderField(ctx, v)
+			data, err := ec.unmarshalNTest01OrderField2ᚖginentᚋentᚐTest01OrderField(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4673,7 +4673,7 @@ func (ec *executionContext) unmarshalInputTodoOrder(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			data, err := ec.unmarshalNTodoOrderField2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoOrderField(ctx, v)
+			data, err := ec.unmarshalNTodoOrderField2ᚖginentᚋentᚐTodoOrderField(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5596,12 +5596,12 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) unmarshalNCreateTest01Input2githubᚗcomᚋpumy2517ᚋginentᚋentᚐCreateTest01Input(ctx context.Context, v interface{}) (ent.CreateTest01Input, error) {
+func (ec *executionContext) unmarshalNCreateTest01Input2ginentᚋentᚐCreateTest01Input(ctx context.Context, v interface{}) (ent.CreateTest01Input, error) {
 	res, err := ec.unmarshalInputCreateTest01Input(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateTodoInput2githubᚗcomᚋpumy2517ᚋginentᚋentᚐCreateTodoInput(ctx context.Context, v interface{}) (ent.CreateTodoInput, error) {
+func (ec *executionContext) unmarshalNCreateTodoInput2ginentᚋentᚐCreateTodoInput(ctx context.Context, v interface{}) (ent.CreateTodoInput, error) {
 	res, err := ec.unmarshalInputCreateTodoInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -5678,7 +5678,7 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNNode2ᚕgithubᚗcomᚋpumy2517ᚋginentᚋentᚐNoder(ctx context.Context, sel ast.SelectionSet, v []ent.Noder) graphql.Marshaler {
+func (ec *executionContext) marshalNNode2ᚕginentᚋentᚐNoder(ctx context.Context, sel ast.SelectionSet, v []ent.Noder) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5702,7 +5702,7 @@ func (ec *executionContext) marshalNNode2ᚕgithubᚗcomᚋpumy2517ᚋginentᚋe
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalONode2githubᚗcomᚋpumy2517ᚋginentᚋentᚐNoder(ctx, sel, v[i])
+			ret[i] = ec.marshalONode2ginentᚋentᚐNoder(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5745,7 +5745,7 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) marshalNTest012ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01(ctx context.Context, sel ast.SelectionSet, v *ent.Test01) graphql.Marshaler {
+func (ec *executionContext) marshalNTest012ᚖginentᚋentᚐTest01(ctx context.Context, sel ast.SelectionSet, v *ent.Test01) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -5755,11 +5755,11 @@ func (ec *executionContext) marshalNTest012ᚖgithubᚗcomᚋpumy2517ᚋginent�
 	return ec._Test01(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNTest01Connection2githubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Connection(ctx context.Context, sel ast.SelectionSet, v ent.Test01Connection) graphql.Marshaler {
+func (ec *executionContext) marshalNTest01Connection2ginentᚋentᚐTest01Connection(ctx context.Context, sel ast.SelectionSet, v ent.Test01Connection) graphql.Marshaler {
 	return ec._Test01Connection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNTest01Connection2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Connection(ctx context.Context, sel ast.SelectionSet, v *ent.Test01Connection) graphql.Marshaler {
+func (ec *executionContext) marshalNTest01Connection2ᚖginentᚋentᚐTest01Connection(ctx context.Context, sel ast.SelectionSet, v *ent.Test01Connection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -5769,18 +5769,18 @@ func (ec *executionContext) marshalNTest01Connection2ᚖgithubᚗcomᚋpumy2517�
 	return ec._Test01Connection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNTest01Order2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Order(ctx context.Context, v interface{}) (*ent.Test01Order, error) {
+func (ec *executionContext) unmarshalNTest01Order2ᚖginentᚋentᚐTest01Order(ctx context.Context, v interface{}) (*ent.Test01Order, error) {
 	res, err := ec.unmarshalInputTest01Order(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNTest01OrderField2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01OrderField(ctx context.Context, v interface{}) (*ent.Test01OrderField, error) {
+func (ec *executionContext) unmarshalNTest01OrderField2ᚖginentᚋentᚐTest01OrderField(ctx context.Context, v interface{}) (*ent.Test01OrderField, error) {
 	var res = new(ent.Test01OrderField)
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNTest01OrderField2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01OrderField(ctx context.Context, sel ast.SelectionSet, v *ent.Test01OrderField) graphql.Marshaler {
+func (ec *executionContext) marshalNTest01OrderField2ᚖginentᚋentᚐTest01OrderField(ctx context.Context, sel ast.SelectionSet, v *ent.Test01OrderField) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -5790,13 +5790,13 @@ func (ec *executionContext) marshalNTest01OrderField2ᚖgithubᚗcomᚋpumy2517�
 	return v
 }
 
-func (ec *executionContext) unmarshalNTest01Status2githubᚗcomᚋpumy2517ᚋginentᚋentᚋtest01ᚐStatus(ctx context.Context, v interface{}) (test01.Status, error) {
+func (ec *executionContext) unmarshalNTest01Status2ginentᚋentᚋtest01ᚐStatus(ctx context.Context, v interface{}) (test01.Status, error) {
 	var res test01.Status
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNTest01Status2githubᚗcomᚋpumy2517ᚋginentᚋentᚋtest01ᚐStatus(ctx context.Context, sel ast.SelectionSet, v test01.Status) graphql.Marshaler {
+func (ec *executionContext) marshalNTest01Status2ginentᚋentᚋtest01ᚐStatus(ctx context.Context, sel ast.SelectionSet, v test01.Status) graphql.Marshaler {
 	return v
 }
 
@@ -5815,7 +5815,7 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) marshalNTodo2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodo(ctx context.Context, sel ast.SelectionSet, v *ent.Todo) graphql.Marshaler {
+func (ec *executionContext) marshalNTodo2ᚖginentᚋentᚐTodo(ctx context.Context, sel ast.SelectionSet, v *ent.Todo) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -5825,11 +5825,11 @@ func (ec *executionContext) marshalNTodo2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋe
 	return ec._Todo(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNTodoConnection2githubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoConnection(ctx context.Context, sel ast.SelectionSet, v ent.TodoConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNTodoConnection2ginentᚋentᚐTodoConnection(ctx context.Context, sel ast.SelectionSet, v ent.TodoConnection) graphql.Marshaler {
 	return ec._TodoConnection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNTodoConnection2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoConnection(ctx context.Context, sel ast.SelectionSet, v *ent.TodoConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNTodoConnection2ᚖginentᚋentᚐTodoConnection(ctx context.Context, sel ast.SelectionSet, v *ent.TodoConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -5839,18 +5839,18 @@ func (ec *executionContext) marshalNTodoConnection2ᚖgithubᚗcomᚋpumy2517ᚋ
 	return ec._TodoConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNTodoOrder2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoOrder(ctx context.Context, v interface{}) (*ent.TodoOrder, error) {
+func (ec *executionContext) unmarshalNTodoOrder2ᚖginentᚋentᚐTodoOrder(ctx context.Context, v interface{}) (*ent.TodoOrder, error) {
 	res, err := ec.unmarshalInputTodoOrder(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNTodoOrderField2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoOrderField(ctx context.Context, v interface{}) (*ent.TodoOrderField, error) {
+func (ec *executionContext) unmarshalNTodoOrderField2ᚖginentᚋentᚐTodoOrderField(ctx context.Context, v interface{}) (*ent.TodoOrderField, error) {
 	var res = new(ent.TodoOrderField)
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNTodoOrderField2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.TodoOrderField) graphql.Marshaler {
+func (ec *executionContext) marshalNTodoOrderField2ᚖginentᚋentᚐTodoOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.TodoOrderField) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -5860,13 +5860,13 @@ func (ec *executionContext) marshalNTodoOrderField2ᚖgithubᚗcomᚋpumy2517ᚋ
 	return v
 }
 
-func (ec *executionContext) unmarshalNTodoStatus2githubᚗcomᚋpumy2517ᚋginentᚋentᚋtodoᚐStatus(ctx context.Context, v interface{}) (todo.Status, error) {
+func (ec *executionContext) unmarshalNTodoStatus2ginentᚋentᚋtodoᚐStatus(ctx context.Context, v interface{}) (todo.Status, error) {
 	var res todo.Status
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNTodoStatus2githubᚗcomᚋpumy2517ᚋginentᚋentᚋtodoᚐStatus(ctx context.Context, sel ast.SelectionSet, v todo.Status) graphql.Marshaler {
+func (ec *executionContext) marshalNTodoStatus2ginentᚋentᚋtodoᚐStatus(ctx context.Context, sel ast.SelectionSet, v todo.Status) graphql.Marshaler {
 	return v
 }
 
@@ -6235,7 +6235,7 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return res
 }
 
-func (ec *executionContext) marshalONode2githubᚗcomᚋpumy2517ᚋginentᚋentᚐNoder(ctx context.Context, sel ast.SelectionSet, v ent.Noder) graphql.Marshaler {
+func (ec *executionContext) marshalONode2ginentᚋentᚐNoder(ctx context.Context, sel ast.SelectionSet, v ent.Noder) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6296,7 +6296,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) marshalOTest012ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01ᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.Test01) graphql.Marshaler {
+func (ec *executionContext) marshalOTest012ᚕᚖginentᚋentᚐTest01ᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.Test01) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6323,7 +6323,7 @@ func (ec *executionContext) marshalOTest012ᚕᚖgithubᚗcomᚋpumy2517ᚋginen
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTest012ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01(ctx, sel, v[i])
+			ret[i] = ec.marshalNTest012ᚖginentᚋentᚐTest01(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6343,14 +6343,14 @@ func (ec *executionContext) marshalOTest012ᚕᚖgithubᚗcomᚋpumy2517ᚋginen
 	return ret
 }
 
-func (ec *executionContext) marshalOTest012ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01(ctx context.Context, sel ast.SelectionSet, v *ent.Test01) graphql.Marshaler {
+func (ec *executionContext) marshalOTest012ᚖginentᚋentᚐTest01(ctx context.Context, sel ast.SelectionSet, v *ent.Test01) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Test01(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOTest01Edge2ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Edge(ctx context.Context, sel ast.SelectionSet, v []*ent.Test01Edge) graphql.Marshaler {
+func (ec *executionContext) marshalOTest01Edge2ᚕᚖginentᚋentᚐTest01Edge(ctx context.Context, sel ast.SelectionSet, v []*ent.Test01Edge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6377,7 +6377,7 @@ func (ec *executionContext) marshalOTest01Edge2ᚕᚖgithubᚗcomᚋpumy2517ᚋg
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOTest01Edge2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Edge(ctx, sel, v[i])
+			ret[i] = ec.marshalOTest01Edge2ᚖginentᚋentᚐTest01Edge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6391,14 +6391,14 @@ func (ec *executionContext) marshalOTest01Edge2ᚕᚖgithubᚗcomᚋpumy2517ᚋg
 	return ret
 }
 
-func (ec *executionContext) marshalOTest01Edge2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Edge(ctx context.Context, sel ast.SelectionSet, v *ent.Test01Edge) graphql.Marshaler {
+func (ec *executionContext) marshalOTest01Edge2ᚖginentᚋentᚐTest01Edge(ctx context.Context, sel ast.SelectionSet, v *ent.Test01Edge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Test01Edge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOTest01Order2ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Orderᚄ(ctx context.Context, v interface{}) ([]*ent.Test01Order, error) {
+func (ec *executionContext) unmarshalOTest01Order2ᚕᚖginentᚋentᚐTest01Orderᚄ(ctx context.Context, v interface{}) ([]*ent.Test01Order, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -6410,7 +6410,7 @@ func (ec *executionContext) unmarshalOTest01Order2ᚕᚖgithubᚗcomᚋpumy2517�
 	res := make([]*ent.Test01Order, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNTest01Order2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTest01Order(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNTest01Order2ᚖginentᚋentᚐTest01Order(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -6418,7 +6418,7 @@ func (ec *executionContext) unmarshalOTest01Order2ᚕᚖgithubᚗcomᚋpumy2517�
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalOTest01Status2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚋtest01ᚐStatus(ctx context.Context, v interface{}) (*test01.Status, error) {
+func (ec *executionContext) unmarshalOTest01Status2ᚖginentᚋentᚋtest01ᚐStatus(ctx context.Context, v interface{}) (*test01.Status, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -6427,7 +6427,7 @@ func (ec *executionContext) unmarshalOTest01Status2ᚖgithubᚗcomᚋpumy2517ᚋ
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOTest01Status2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚋtest01ᚐStatus(ctx context.Context, sel ast.SelectionSet, v *test01.Status) graphql.Marshaler {
+func (ec *executionContext) marshalOTest01Status2ᚖginentᚋentᚋtest01ᚐStatus(ctx context.Context, sel ast.SelectionSet, v *test01.Status) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6450,7 +6450,7 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	return res
 }
 
-func (ec *executionContext) marshalOTodo2ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.Todo) graphql.Marshaler {
+func (ec *executionContext) marshalOTodo2ᚕᚖginentᚋentᚐTodoᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.Todo) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6477,7 +6477,7 @@ func (ec *executionContext) marshalOTodo2ᚕᚖgithubᚗcomᚋpumy2517ᚋginent�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTodo2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodo(ctx, sel, v[i])
+			ret[i] = ec.marshalNTodo2ᚖginentᚋentᚐTodo(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6497,14 +6497,14 @@ func (ec *executionContext) marshalOTodo2ᚕᚖgithubᚗcomᚋpumy2517ᚋginent�
 	return ret
 }
 
-func (ec *executionContext) marshalOTodo2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodo(ctx context.Context, sel ast.SelectionSet, v *ent.Todo) graphql.Marshaler {
+func (ec *executionContext) marshalOTodo2ᚖginentᚋentᚐTodo(ctx context.Context, sel ast.SelectionSet, v *ent.Todo) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Todo(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOTodoEdge2ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.TodoEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOTodoEdge2ᚕᚖginentᚋentᚐTodoEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.TodoEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6531,7 +6531,7 @@ func (ec *executionContext) marshalOTodoEdge2ᚕᚖgithubᚗcomᚋpumy2517ᚋgin
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOTodoEdge2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalOTodoEdge2ᚖginentᚋentᚐTodoEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6545,14 +6545,14 @@ func (ec *executionContext) marshalOTodoEdge2ᚕᚖgithubᚗcomᚋpumy2517ᚋgin
 	return ret
 }
 
-func (ec *executionContext) marshalOTodoEdge2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoEdge(ctx context.Context, sel ast.SelectionSet, v *ent.TodoEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOTodoEdge2ᚖginentᚋentᚐTodoEdge(ctx context.Context, sel ast.SelectionSet, v *ent.TodoEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._TodoEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOTodoOrder2ᚕᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoOrderᚄ(ctx context.Context, v interface{}) ([]*ent.TodoOrder, error) {
+func (ec *executionContext) unmarshalOTodoOrder2ᚕᚖginentᚋentᚐTodoOrderᚄ(ctx context.Context, v interface{}) ([]*ent.TodoOrder, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -6564,7 +6564,7 @@ func (ec *executionContext) unmarshalOTodoOrder2ᚕᚖgithubᚗcomᚋpumy2517ᚋ
 	res := make([]*ent.TodoOrder, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNTodoOrder2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚐTodoOrder(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNTodoOrder2ᚖginentᚋentᚐTodoOrder(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -6572,7 +6572,7 @@ func (ec *executionContext) unmarshalOTodoOrder2ᚕᚖgithubᚗcomᚋpumy2517ᚋ
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalOTodoStatus2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚋtodoᚐStatus(ctx context.Context, v interface{}) (*todo.Status, error) {
+func (ec *executionContext) unmarshalOTodoStatus2ᚖginentᚋentᚋtodoᚐStatus(ctx context.Context, v interface{}) (*todo.Status, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -6581,7 +6581,7 @@ func (ec *executionContext) unmarshalOTodoStatus2ᚖgithubᚗcomᚋpumy2517ᚋgi
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOTodoStatus2ᚖgithubᚗcomᚋpumy2517ᚋginentᚋentᚋtodoᚐStatus(ctx context.Context, sel ast.SelectionSet, v *todo.Status) graphql.Marshaler {
+func (ec *executionContext) marshalOTodoStatus2ᚖginentᚋentᚋtodoᚐStatus(ctx context.Context, sel ast.SelectionSet, v *todo.Status) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

@@ -6,11 +6,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"ginent/ent/todo"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/pumy2517/ginent/ent/todo"
 )
 
 // TodoCreate is the builder for creating a Todo entity.

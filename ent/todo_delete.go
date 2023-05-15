@@ -4,12 +4,12 @@ package ent
 
 import (
 	"context"
+	"ginent/ent/predicate"
+	"ginent/ent/todo"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/pumy2517/ginent/ent/predicate"
-	"github.com/pumy2517/ginent/ent/todo"
 )
 
 // TodoDelete is the builder for deleting a Todo entity.

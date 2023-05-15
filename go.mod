@@ -1,4 +1,4 @@
-module github.com/pumy2517/ginent
+module ginent
 
 go 1.20
 

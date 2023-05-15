@@ -1,11 +1,12 @@
-package controller
+package resolvers
 
 // This file will not be regenerated automatically.
 import (
-	"github.com/pumy2517/ginent/ent"
+	"ginent/ent"
+
+	"ginent"
 
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/pumy2517/ginent"
 )
 
 // This file will not be regenerated automatically.

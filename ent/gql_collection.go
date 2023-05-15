@@ -4,12 +4,12 @@ package ent
 
 import (
 	"context"
+	"ginent/ent/test01"
+	"ginent/ent/todo"
 
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/pumy2517/ginent/ent/test01"
-	"github.com/pumy2517/ginent/ent/todo"
 )
 
 // CollectFields tells the query-builder to eagerly load connected nodes by resolver context.

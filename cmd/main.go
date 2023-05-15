@@ -6,13 +6,14 @@ import (
 
 	_ "github.com/lib/pq"
 
+	"ginent/ent"
+	"ginent/ent/migrate"
+	"ginent/feature/resolvers"
+
 	"entgo.io/ent/dialect"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/gin-gonic/gin"
-	"github.com/pumy2517/ginent/ent"
-	"github.com/pumy2517/ginent/ent/migrate"
-	controller "github.com/pumy2517/ginent/feature/controller"
 )
 
 type Server struct {
@@ -38,7 +39,7 @@ func initDatabase() {
 func graphqlHandler() gin.HandlerFunc {
 	// NewExecutableSchema and Config are in the generated.go file
 	// Resolver is in the resolver.go file
-	h := handler.NewDefaultServer(controller.NewSchema(svr.db))
+	h := handler.NewDefaultServer(resolvers.NewSchema(svr.db))
 
 	return func(c *gin.Context) {
 		h.ServeHTTP(c.Writer, c.Request)
@@ -75,8 +76,8 @@ func main() {
 // 	"entgo.io/ent/dialect"
 // 	"github.com/gin-gonic/gin"
 // 	_ "github.com/lib/pq"
-// 	"github.com/pumy2517/ginent/ent"
-// 	"github.com/pumy2517/ginent/feature/todo"
+// 	"ginent/ent"
+// 	"ginent/feature/todo"
 // )
 
 // type Server struct {

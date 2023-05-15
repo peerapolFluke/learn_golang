@@ -5,6 +5,8 @@ package ent
 import (
 	"context"
 	"fmt"
+	"ginent/ent/test01"
+	"ginent/ent/todo"
 	"sync"
 	"sync/atomic"
 
@@ -14,8 +16,6 @@ import (
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/hashicorp/go-multierror"
-	"github.com/pumy2517/ginent/ent/test01"
-	"github.com/pumy2517/ginent/ent/todo"
 	"golang.org/x/sync/semaphore"
 )
 

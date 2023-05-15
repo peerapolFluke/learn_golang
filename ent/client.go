@@ -8,14 +8,15 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/pumy2517/ginent/ent/migrate"
+	"ginent/ent/migrate"
+
+	"ginent/ent/test01"
+	"ginent/ent/todo"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/pumy2517/ginent/ent/test01"
-	"github.com/pumy2517/ginent/ent/todo"
 )
 
 // Client is the client that holds all ent builders.

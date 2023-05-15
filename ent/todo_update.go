@@ -6,12 +6,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"ginent/ent/predicate"
+	"ginent/ent/todo"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/pumy2517/ginent/ent/predicate"
-	"github.com/pumy2517/ginent/ent/todo"
 )
 
 // TodoUpdate is the builder for updating Todo entities.

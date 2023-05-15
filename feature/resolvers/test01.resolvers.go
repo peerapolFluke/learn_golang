@@ -1,4 +1,4 @@
-package controller
+package resolvers
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -7,8 +7,7 @@ package controller
 import (
 	"context"
 	"fmt"
-
-	"github.com/pumy2517/ginent/ent"
+	"ginent/ent"
 )
 
 // CreateTest01 is the resolver for the createTest01 field.

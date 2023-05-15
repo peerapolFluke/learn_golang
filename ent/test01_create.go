@@ -6,11 +6,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"ginent/ent/test01"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/pumy2517/ginent/ent/test01"
 )
 
 // Test01Create is the builder for creating a Test01 entity.

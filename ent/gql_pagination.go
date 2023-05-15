@@ -6,6 +6,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"ginent/ent/test01"
+	"ginent/ent/todo"
 	"io"
 	"strconv"
 
@@ -14,8 +16,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/errcode"
-	"github.com/pumy2517/ginent/ent/test01"
-	"github.com/pumy2517/ginent/ent/todo"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 

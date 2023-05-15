@@ -4,12 +4,12 @@ package ent
 
 import (
 	"fmt"
+	"ginent/ent/test01"
 	"strings"
 	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/pumy2517/ginent/ent/test01"
 )
 
 // Test01 is the model entity for the Test01 schema.

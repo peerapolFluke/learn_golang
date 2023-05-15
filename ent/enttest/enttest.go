@@ -4,13 +4,13 @@ package enttest
 
 import (
 	"context"
-
-	"github.com/pumy2517/ginent/ent"
+	"ginent/ent"
 	// required by schema hooks.
-	_ "github.com/pumy2517/ginent/ent/runtime"
+	_ "ginent/ent/runtime"
+
+	"ginent/ent/migrate"
 
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/pumy2517/ginent/ent/migrate"
 )
 
 type (
