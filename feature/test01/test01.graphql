@@ -1,3 +1,0 @@
-extend type Mutation {
-  createTest01(input: CreateTest01Input!): Test01
-}

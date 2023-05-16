@@ -55,6 +55,7 @@ type CreateTodoInput struct {
 	UpdateAt  *time.Time
 	Status    *todo.Status
 	Priority  *int
+	UserID    *int
 	ParentID  *int
 	ChildIDs  []int
 }
@@ -73,6 +74,9 @@ func (i *CreateTodoInput) Mutate(m *TodoMutation) {
 	}
 	if v := i.Priority; v != nil {
 		m.SetPriority(*v)
+	}
+	if v := i.UserID; v != nil {
+		m.SetUserID(*v)
 	}
 	if v := i.ParentID; v != nil {
 		m.SetParentID(*v)

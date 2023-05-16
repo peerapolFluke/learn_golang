@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"ginent/ent/test01"
 	"ginent/ent/todo"
+	"ginent/ent/user"
 	"reflect"
 	"sync"
 
@@ -76,6 +77,7 @@ func checkColumn(table, column string) error {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
 			test01.Table: test01.ValidColumn,
 			todo.Table:   todo.ValidColumn,
+			user.Table:   user.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

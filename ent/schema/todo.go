@@ -54,6 +54,9 @@ func (Todo) Fields() []ent.Field {
 // Edges of the Todo.
 func (Todo) Edges() []ent.Edge {
 	return []ent.Edge{
+		edge.From("user", User.Type).
+			Ref("todos").
+			Unique(),
 		edge.To("children", Todo.Type).
 			From("parent").
 			Annotations(

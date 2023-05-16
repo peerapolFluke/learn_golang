@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"ginent/ent/predicate"
 	"ginent/ent/todo"
+	"ginent/ent/user"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -68,6 +69,25 @@ func (tu *TodoUpdate) AddPriority(i int) *TodoUpdate {
 	return tu
 }
 
+// SetUserID sets the "user" edge to the User entity by ID.
+func (tu *TodoUpdate) SetUserID(id int) *TodoUpdate {
+	tu.mutation.SetUserID(id)
+	return tu
+}
+
+// SetNillableUserID sets the "user" edge to the User entity by ID if the given value is not nil.
+func (tu *TodoUpdate) SetNillableUserID(id *int) *TodoUpdate {
+	if id != nil {
+		tu = tu.SetUserID(*id)
+	}
+	return tu
+}
+
+// SetUser sets the "user" edge to the User entity.
+func (tu *TodoUpdate) SetUser(u *User) *TodoUpdate {
+	return tu.SetUserID(u.ID)
+}
+
 // SetParentID sets the "parent" edge to the Todo entity by ID.
 func (tu *TodoUpdate) SetParentID(id int) *TodoUpdate {
 	tu.mutation.SetParentID(id)
@@ -105,6 +125,12 @@ func (tu *TodoUpdate) AddChildren(t ...*Todo) *TodoUpdate {
 // Mutation returns the TodoMutation object of the builder.
 func (tu *TodoUpdate) Mutation() *TodoMutation {
 	return tu.mutation
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (tu *TodoUpdate) ClearUser() *TodoUpdate {
+	tu.mutation.ClearUser()
+	return tu
 }
 
 // ClearParent clears the "parent" edge to the Todo entity.
@@ -199,6 +225,35 @@ func (tu *TodoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tu.mutation.AddedPriority(); ok {
 		_spec.AddField(todo.FieldPriority, field.TypeInt, value)
+	}
+	if tu.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   todo.UserTable,
+			Columns: []string{todo.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tu.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   todo.UserTable,
+			Columns: []string{todo.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if tu.mutation.ParentCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -335,6 +390,25 @@ func (tuo *TodoUpdateOne) AddPriority(i int) *TodoUpdateOne {
 	return tuo
 }
 
+// SetUserID sets the "user" edge to the User entity by ID.
+func (tuo *TodoUpdateOne) SetUserID(id int) *TodoUpdateOne {
+	tuo.mutation.SetUserID(id)
+	return tuo
+}
+
+// SetNillableUserID sets the "user" edge to the User entity by ID if the given value is not nil.
+func (tuo *TodoUpdateOne) SetNillableUserID(id *int) *TodoUpdateOne {
+	if id != nil {
+		tuo = tuo.SetUserID(*id)
+	}
+	return tuo
+}
+
+// SetUser sets the "user" edge to the User entity.
+func (tuo *TodoUpdateOne) SetUser(u *User) *TodoUpdateOne {
+	return tuo.SetUserID(u.ID)
+}
+
 // SetParentID sets the "parent" edge to the Todo entity by ID.
 func (tuo *TodoUpdateOne) SetParentID(id int) *TodoUpdateOne {
 	tuo.mutation.SetParentID(id)
@@ -372,6 +446,12 @@ func (tuo *TodoUpdateOne) AddChildren(t ...*Todo) *TodoUpdateOne {
 // Mutation returns the TodoMutation object of the builder.
 func (tuo *TodoUpdateOne) Mutation() *TodoMutation {
 	return tuo.mutation
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (tuo *TodoUpdateOne) ClearUser() *TodoUpdateOne {
+	tuo.mutation.ClearUser()
+	return tuo
 }
 
 // ClearParent clears the "parent" edge to the Todo entity.
@@ -496,6 +576,35 @@ func (tuo *TodoUpdateOne) sqlSave(ctx context.Context) (_node *Todo, err error) 
 	}
 	if value, ok := tuo.mutation.AddedPriority(); ok {
 		_spec.AddField(todo.FieldPriority, field.TypeInt, value)
+	}
+	if tuo.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   todo.UserTable,
+			Columns: []string{todo.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tuo.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   todo.UserTable,
+			Columns: []string{todo.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if tuo.mutation.ParentCleared() {
 		edge := &sqlgraph.EdgeSpec{

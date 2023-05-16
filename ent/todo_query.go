@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"ginent/ent/predicate"
 	"ginent/ent/todo"
+	"ginent/ent/user"
 	"math"
 
 	"entgo.io/ent/dialect/sql"
@@ -22,6 +23,7 @@ type TodoQuery struct {
 	order             []todo.OrderOption
 	inters            []Interceptor
 	predicates        []predicate.Todo
+	withUser          *UserQuery
 	withParent        *TodoQuery
 	withChildren      *TodoQuery
 	withFKs           bool
@@ -62,6 +64,28 @@ func (tq *TodoQuery) Unique(unique bool) *TodoQuery {
 func (tq *TodoQuery) Order(o ...todo.OrderOption) *TodoQuery {
 	tq.order = append(tq.order, o...)
 	return tq
+}
+
+// QueryUser chains the current query on the "user" edge.
+func (tq *TodoQuery) QueryUser() *UserQuery {
+	query := (&UserClient{config: tq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := tq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := tq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(todo.Table, todo.FieldID, selector),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, todo.UserTable, todo.UserColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // QueryParent chains the current query on the "parent" edge.
@@ -300,12 +324,24 @@ func (tq *TodoQuery) Clone() *TodoQuery {
 		order:        append([]todo.OrderOption{}, tq.order...),
 		inters:       append([]Interceptor{}, tq.inters...),
 		predicates:   append([]predicate.Todo{}, tq.predicates...),
+		withUser:     tq.withUser.Clone(),
 		withParent:   tq.withParent.Clone(),
 		withChildren: tq.withChildren.Clone(),
 		// clone intermediate query.
 		sql:  tq.sql.Clone(),
 		path: tq.path,
 	}
+}
+
+// WithUser tells the query-builder to eager-load the nodes that are connected to
+// the "user" edge. The optional arguments are used to configure the query builder of the edge.
+func (tq *TodoQuery) WithUser(opts ...func(*UserQuery)) *TodoQuery {
+	query := (&UserClient{config: tq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	tq.withUser = query
+	return tq
 }
 
 // WithParent tells the query-builder to eager-load the nodes that are connected to
@@ -409,12 +445,13 @@ func (tq *TodoQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Todo, e
 		nodes       = []*Todo{}
 		withFKs     = tq.withFKs
 		_spec       = tq.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [3]bool{
+			tq.withUser != nil,
 			tq.withParent != nil,
 			tq.withChildren != nil,
 		}
 	)
-	if tq.withParent != nil {
+	if tq.withUser != nil || tq.withParent != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -440,6 +477,12 @@ func (tq *TodoQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Todo, e
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
+	}
+	if query := tq.withUser; query != nil {
+		if err := tq.loadUser(ctx, query, nodes, nil,
+			func(n *Todo, e *User) { n.Edges.User = e }); err != nil {
+			return nil, err
+		}
 	}
 	if query := tq.withParent; query != nil {
 		if err := tq.loadParent(ctx, query, nodes, nil,
@@ -469,6 +512,38 @@ func (tq *TodoQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Todo, e
 	return nodes, nil
 }
 
+func (tq *TodoQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*Todo, init func(*Todo), assign func(*Todo, *User)) error {
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*Todo)
+	for i := range nodes {
+		if nodes[i].user_todos == nil {
+			continue
+		}
+		fk := *nodes[i].user_todos
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(user.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "user_todos" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
+}
 func (tq *TodoQuery) loadParent(ctx context.Context, query *TodoQuery, nodes []*Todo, init func(*Todo), assign func(*Todo, *Todo)) error {
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*Todo)

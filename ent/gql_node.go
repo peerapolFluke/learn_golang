@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"ginent/ent/test01"
 	"ginent/ent/todo"
+	"ginent/ent/user"
 	"sync"
 	"sync/atomic"
 
@@ -33,6 +34,11 @@ var todoImplementors = []string{"Todo", "Node"}
 
 // IsNode implements the Node interface check for GQLGen.
 func (*Todo) IsNode() {}
+
+var userImplementors = []string{"User", "Node"}
+
+// IsNode implements the Node interface check for GQLGen.
+func (*User) IsNode() {}
 
 var errNodeInvalidID = &NotFoundError{"node"}
 
@@ -108,6 +114,18 @@ func (c *Client) noder(ctx context.Context, table string, id int) (Noder, error)
 		query := c.Todo.Query().
 			Where(todo.ID(id))
 		query, err := query.CollectFields(ctx, todoImplementors...)
+		if err != nil {
+			return nil, err
+		}
+		n, err := query.Only(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return n, nil
+	case user.Table:
+		query := c.User.Query().
+			Where(user.ID(id))
+		query, err := query.CollectFields(ctx, userImplementors...)
 		if err != nil {
 			return nil, err
 		}
@@ -209,6 +227,22 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 		query := c.Todo.Query().
 			Where(todo.IDIn(ids...))
 		query, err := query.CollectFields(ctx, todoImplementors...)
+		if err != nil {
+			return nil, err
+		}
+		nodes, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, node := range nodes {
+			for _, noder := range idmap[node.ID] {
+				*noder = node
+			}
+		}
+	case user.Table:
+		query := c.User.Query().
+			Where(user.IDIn(ids...))
+		query, err := query.CollectFields(ctx, userImplementors...)
 		if err != nil {
 			return nil, err
 		}

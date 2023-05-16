@@ -23,6 +23,7 @@ input CreateTodoInput {
   updateAt: Time
   status: TodoStatus
   priority: Int
+  userID: ID
   parentID: ID
   childIDs: [ID!]
 }
@@ -160,6 +161,7 @@ type Todo implements Node {
   updateAt: Time!
   status: TodoStatus!
   priority: Int!
+  user: User
   parent: Todo
   children: [Todo!]
 }
@@ -199,4 +201,9 @@ enum TodoOrderField {
 enum TodoStatus @goModel(model: "ginent/ent/todo.Status") {
   IN_PROGRESS
   COMPLETED
+}
+type User implements Node {
+  id: ID!
+  name: String!
+  todos: [Todo!]
 }

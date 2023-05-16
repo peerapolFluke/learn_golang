@@ -280,6 +280,29 @@ func PriorityLTE(v int) predicate.Todo {
 	return predicate.Todo(sql.FieldLTE(FieldPriority, v))
 }
 
+// HasUser applies the HasEdge predicate on the "user" edge.
+func HasUser() predicate.Todo {
+	return predicate.Todo(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, UserTable, UserColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasUserWith applies the HasEdge predicate on the "user" edge with a given conditions (other predicates).
+func HasUserWith(preds ...predicate.User) predicate.Todo {
+	return predicate.Todo(func(s *sql.Selector) {
+		step := newUserStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasParent applies the HasEdge predicate on the "parent" edge.
 func HasParent() predicate.Todo {
 	return predicate.Todo(func(s *sql.Selector) {
