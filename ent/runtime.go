@@ -3,28 +3,35 @@
 package ent
 
 import (
+	"seamoor/ent/schema"
+	"seamoor/ent/user"
 	"time"
-
-	"github.com/pumy2517/ginent/ent/schema"
-	"github.com/pumy2517/ginent/ent/todo"
 )
 
 // The init function reads all schema descriptors with runtime code
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
-	todoFields := schema.Todo{}.Fields()
-	_ = todoFields
-	// todoDescText is the schema descriptor for text field.
-	todoDescText := todoFields[0].Descriptor()
-	// todo.TextValidator is a validator for the "text" field. It is called by the builders before save.
-	todo.TextValidator = todoDescText.Validators[0].(func(string) error)
-	// todoDescCreatedAt is the schema descriptor for created_at field.
-	todoDescCreatedAt := todoFields[1].Descriptor()
-	// todo.DefaultCreatedAt holds the default value on creation for the created_at field.
-	todo.DefaultCreatedAt = todoDescCreatedAt.Default.(func() time.Time)
-	// todoDescPriority is the schema descriptor for priority field.
-	todoDescPriority := todoFields[3].Descriptor()
-	// todo.DefaultPriority holds the default value on creation for the priority field.
-	todo.DefaultPriority = todoDescPriority.Default.(int)
+	userFields := schema.User{}.Fields()
+	_ = userFields
+	// userDescName is the schema descriptor for name field.
+	userDescName := userFields[0].Descriptor()
+	// user.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	user.NameValidator = userDescName.Validators[0].(func(string) error)
+	// userDescSurname is the schema descriptor for surname field.
+	userDescSurname := userFields[1].Descriptor()
+	// user.SurnameValidator is a validator for the "surname" field. It is called by the builders before save.
+	user.SurnameValidator = userDescSurname.Validators[0].(func(string) error)
+	// userDescEmail is the schema descriptor for email field.
+	userDescEmail := userFields[2].Descriptor()
+	// user.EmailValidator is a validator for the "email" field. It is called by the builders before save.
+	user.EmailValidator = userDescEmail.Validators[0].(func(string) error)
+	// userDescPassword is the schema descriptor for password field.
+	userDescPassword := userFields[3].Descriptor()
+	// user.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
+	user.PasswordValidator = userDescPassword.Validators[0].(func(string) error)
+	// userDescCreatedAt is the schema descriptor for created_at field.
+	userDescCreatedAt := userFields[9].Descriptor()
+	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
+	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() time.Time)
 }

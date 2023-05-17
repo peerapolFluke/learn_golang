@@ -5,6 +5,7 @@ package ent
 import (
 	"context"
 	"fmt"
+	"seamoor/ent/user"
 	"sync"
 	"sync/atomic"
 
@@ -14,7 +15,6 @@ import (
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/hashicorp/go-multierror"
-	"github.com/pumy2517/ginent/ent/todo"
 	"golang.org/x/sync/semaphore"
 )
 
@@ -23,10 +23,10 @@ type Noder interface {
 	IsNode()
 }
 
-var todoImplementors = []string{"Todo", "Node"}
+var userImplementors = []string{"User", "Node"}
 
 // IsNode implements the Node interface check for GQLGen.
-func (*Todo) IsNode() {}
+func (*User) IsNode() {}
 
 var errNodeInvalidID = &NotFoundError{"node"}
 
@@ -86,10 +86,10 @@ func (c *Client) Noder(ctx context.Context, id int, opts ...NodeOption) (_ Noder
 
 func (c *Client) noder(ctx context.Context, table string, id int) (Noder, error) {
 	switch table {
-	case todo.Table:
-		query := c.Todo.Query().
-			Where(todo.ID(id))
-		query, err := query.CollectFields(ctx, todoImplementors...)
+	case user.Table:
+		query := c.User.Query().
+			Where(user.ID(id))
+		query, err := query.CollectFields(ctx, userImplementors...)
 		if err != nil {
 			return nil, err
 		}
@@ -171,10 +171,10 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 		idmap[id] = append(idmap[id], &noders[i])
 	}
 	switch table {
-	case todo.Table:
-		query := c.Todo.Query().
-			Where(todo.IDIn(ids...))
-		query, err := query.CollectFields(ctx, todoImplementors...)
+	case user.Table:
+		query := c.User.Query().
+			Where(user.IDIn(ids...))
+		query, err := query.CollectFields(ctx, userImplementors...)
 		if err != nil {
 			return nil, err
 		}

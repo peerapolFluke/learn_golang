@@ -1,12 +1,12 @@
 # schema tells gqlgen where the GraphQL schema is located.
 schema:
-  - ent.graphql
-  - feature/todo/todo.graphql
+  - graphql/*.gql
+  - graphql/*.graphql
 
 # resolver reports where the resolver implementations go.
 resolver:
   layout: follow-schema
-  dir: .
+  dir: ./resolvers
 
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
@@ -14,8 +14,8 @@ resolver:
 # autobind tells gqngen to search for any type names in the GraphQL schema in the
 # provided package. If they match it will use them, otherwise it will generate new.
 autobind:
-  - github.com/pumy2517/ginent/ent
-  - github.com/pumy2517/ginent/ent/todo
+  - seamoor/ent
+  - seamoor/ent/user
 
 # This section declares type mapping between the GraphQL and Go type systems.
 models:
@@ -25,4 +25,4 @@ models:
       - github.com/99designs/gqlgen/graphql.IntID
   Node:
     model:
-      - github.com/pumy2517/ginent/ent.Noder
+      - seamoor/ent.Noder

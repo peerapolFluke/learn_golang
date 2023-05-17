@@ -1,0 +1,28 @@
+directive @binding(constraint: String!) on INPUT_FIELD_DEFINITION | ARGUMENT_DEFINITION
+directive @authGuard on FIELD_DEFINITION
+
+extend type Query {
+    profile: User! @authGuard
+}
+
+input CreateUserInput {
+    name: String!
+    surname: String!
+    position: String!
+    email: String! @binding(constraint: "required,email")
+    role: UserRole!
+}
+
+input LoginInput{
+    email: String!
+    password: String!
+}
+
+type Credential{
+    accessToken: String!
+}
+
+type Mutation {
+    createUser(input: CreateUserInput): User
+    login(input: LoginInput): Credential
+}

@@ -4,75 +4,92 @@ package ent
 
 import (
 	"context"
+	"seamoor/ent/user"
 
-	"entgo.io/contrib/entgql"
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/pumy2517/ginent/ent/todo"
 )
 
 // CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
-func (t *TodoQuery) CollectFields(ctx context.Context, satisfies ...string) (*TodoQuery, error) {
+func (u *UserQuery) CollectFields(ctx context.Context, satisfies ...string) (*UserQuery, error) {
 	fc := graphql.GetFieldContext(ctx)
 	if fc == nil {
-		return t, nil
+		return u, nil
 	}
-	if err := t.collectField(ctx, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
+	if err := u.collectField(ctx, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
 		return nil, err
 	}
-	return t, nil
+	return u, nil
 }
 
-func (t *TodoQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
+func (u *UserQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
 	path = append([]string(nil), path...)
 	var (
 		unknownSeen    bool
-		fieldSeen      = make(map[string]struct{}, len(todo.Columns))
-		selectedFields = []string{todo.FieldID}
+		fieldSeen      = make(map[string]struct{}, len(user.Columns))
+		selectedFields = []string{user.FieldID}
 	)
 	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
 		switch field.Name {
-		case "parent":
-			var (
-				alias = field.Alias
-				path  = append(path, alias)
-				query = (&TodoClient{config: t.config}).Query()
-			)
-			if err := query.collectField(ctx, opCtx, field, path, mayAddCondition(satisfies, todoImplementors)...); err != nil {
-				return err
+		case "name":
+			if _, ok := fieldSeen[user.FieldName]; !ok {
+				selectedFields = append(selectedFields, user.FieldName)
+				fieldSeen[user.FieldName] = struct{}{}
 			}
-			t.withParent = query
-		case "children":
-			var (
-				alias = field.Alias
-				path  = append(path, alias)
-				query = (&TodoClient{config: t.config}).Query()
-			)
-			if err := query.collectField(ctx, opCtx, field, path, mayAddCondition(satisfies, todoImplementors)...); err != nil {
-				return err
+		case "surname":
+			if _, ok := fieldSeen[user.FieldSurname]; !ok {
+				selectedFields = append(selectedFields, user.FieldSurname)
+				fieldSeen[user.FieldSurname] = struct{}{}
 			}
-			t.WithNamedChildren(alias, func(wq *TodoQuery) {
-				*wq = *query
-			})
-		case "text":
-			if _, ok := fieldSeen[todo.FieldText]; !ok {
-				selectedFields = append(selectedFields, todo.FieldText)
-				fieldSeen[todo.FieldText] = struct{}{}
+		case "email":
+			if _, ok := fieldSeen[user.FieldEmail]; !ok {
+				selectedFields = append(selectedFields, user.FieldEmail)
+				fieldSeen[user.FieldEmail] = struct{}{}
+			}
+		case "password":
+			if _, ok := fieldSeen[user.FieldPassword]; !ok {
+				selectedFields = append(selectedFields, user.FieldPassword)
+				fieldSeen[user.FieldPassword] = struct{}{}
+			}
+		case "position":
+			if _, ok := fieldSeen[user.FieldPosition]; !ok {
+				selectedFields = append(selectedFields, user.FieldPosition)
+				fieldSeen[user.FieldPosition] = struct{}{}
+			}
+		case "phoneNumber":
+			if _, ok := fieldSeen[user.FieldPhoneNumber]; !ok {
+				selectedFields = append(selectedFields, user.FieldPhoneNumber)
+				fieldSeen[user.FieldPhoneNumber] = struct{}{}
+			}
+		case "address":
+			if _, ok := fieldSeen[user.FieldAddress]; !ok {
+				selectedFields = append(selectedFields, user.FieldAddress)
+				fieldSeen[user.FieldAddress] = struct{}{}
+			}
+		case "profileImgURL":
+			if _, ok := fieldSeen[user.FieldProfileImgURL]; !ok {
+				selectedFields = append(selectedFields, user.FieldProfileImgURL)
+				fieldSeen[user.FieldProfileImgURL] = struct{}{}
+			}
+		case "rubberStampURL":
+			if _, ok := fieldSeen[user.FieldRubberStampURL]; !ok {
+				selectedFields = append(selectedFields, user.FieldRubberStampURL)
+				fieldSeen[user.FieldRubberStampURL] = struct{}{}
 			}
 		case "createdAt":
-			if _, ok := fieldSeen[todo.FieldCreatedAt]; !ok {
-				selectedFields = append(selectedFields, todo.FieldCreatedAt)
-				fieldSeen[todo.FieldCreatedAt] = struct{}{}
+			if _, ok := fieldSeen[user.FieldCreatedAt]; !ok {
+				selectedFields = append(selectedFields, user.FieldCreatedAt)
+				fieldSeen[user.FieldCreatedAt] = struct{}{}
 			}
-		case "status":
-			if _, ok := fieldSeen[todo.FieldStatus]; !ok {
-				selectedFields = append(selectedFields, todo.FieldStatus)
-				fieldSeen[todo.FieldStatus] = struct{}{}
+		case "lastLoginAt":
+			if _, ok := fieldSeen[user.FieldLastLoginAt]; !ok {
+				selectedFields = append(selectedFields, user.FieldLastLoginAt)
+				fieldSeen[user.FieldLastLoginAt] = struct{}{}
 			}
-		case "priority":
-			if _, ok := fieldSeen[todo.FieldPriority]; !ok {
-				selectedFields = append(selectedFields, todo.FieldPriority)
-				fieldSeen[todo.FieldPriority] = struct{}{}
+		case "role":
+			if _, ok := fieldSeen[user.FieldRole]; !ok {
+				selectedFields = append(selectedFields, user.FieldRole)
+				fieldSeen[user.FieldRole] = struct{}{}
 			}
 		case "id":
 		case "__typename":
@@ -81,19 +98,19 @@ func (t *TodoQuery) collectField(ctx context.Context, opCtx *graphql.OperationCo
 		}
 	}
 	if !unknownSeen {
-		t.Select(selectedFields...)
+		u.Select(selectedFields...)
 	}
 	return nil
 }
 
-type todoPaginateArgs struct {
+type userPaginateArgs struct {
 	first, last   *int
 	after, before *Cursor
-	opts          []TodoPaginateOption
+	opts          []UserPaginateOption
 }
 
-func newTodoPaginateArgs(rv map[string]any) *todoPaginateArgs {
-	args := &todoPaginateArgs{}
+func newUserPaginateArgs(rv map[string]any) *userPaginateArgs {
+	args := &userPaginateArgs{}
 	if rv == nil {
 		return args
 	}
@@ -108,34 +125,6 @@ func newTodoPaginateArgs(rv map[string]any) *todoPaginateArgs {
 	}
 	if v := rv[beforeField]; v != nil {
 		args.before = v.(*Cursor)
-	}
-	if v, ok := rv[orderByField]; ok {
-		switch v := v.(type) {
-		case []*TodoOrder:
-			args.opts = append(args.opts, WithTodoOrder(v))
-		case []any:
-			var orders []*TodoOrder
-			for i := range v {
-				mv, ok := v[i].(map[string]any)
-				if !ok {
-					continue
-				}
-				var (
-					err1, err2 error
-					order      = &TodoOrder{Field: &TodoOrderField{}, Direction: entgql.OrderDirectionAsc}
-				)
-				if d, ok := mv[directionField]; ok {
-					err1 = order.Direction.UnmarshalGQL(d)
-				}
-				if f, ok := mv[fieldField]; ok {
-					err2 = order.Field.UnmarshalGQL(f)
-				}
-				if err1 == nil && err2 == nil {
-					orders = append(orders, order)
-				}
-			}
-			args.opts = append(args.opts, WithTodoOrder(orders))
-		}
 	}
 	return args
 }
